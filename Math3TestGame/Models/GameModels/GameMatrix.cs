@@ -1,6 +1,7 @@
 ﻿using Math3TestGame.Tools;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,15 +9,37 @@ using System.Threading.Tasks;
 
 namespace Math3TestGame.Models.GameModels
 {
-    public class GameMatrix
+    public class GameMatrix:IEnumerable<GameObject>
     {
         private GameObject first;
-        private int w = 8;
-        private int h = 8;
+        private int w = 4;
+        private int h = 4;
 
         private Random rnd;
 
         public MatrixState State { get; private set; } = MatrixState.NONE;
+
+        
+        public IEnumerator<GameObject> GetEnumerator()
+        {
+            var current = first;
+            while(current != null)
+            {
+                var left = current;
+                while(left != null)
+                {
+                    yield return left;
+                    left = left.Right;
+                }
+                current = current.Bottom;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
 
         public GameMatrix()
         {
@@ -60,6 +83,7 @@ namespace Math3TestGame.Models.GameModels
 
             return SpriteName.GameObject5;
         }
+
 
         private void FindKilled()
         {
@@ -270,7 +294,7 @@ namespace Math3TestGame.Models.GameModels
 
 
 
-
+        #region DEBUG
 
         public string GetKilledItems()
         {
@@ -395,6 +419,8 @@ namespace Math3TestGame.Models.GameModels
 
             return result;
         }
+
+        #endregion
     }
 
     public enum MatrixState

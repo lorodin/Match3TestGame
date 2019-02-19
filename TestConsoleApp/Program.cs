@@ -37,7 +37,7 @@ namespace TestConsoleApp
             Console.WriteLine(matrix.ToString());
 
             matrix.Next();
-
+             
             Console.WriteLine("Test drop down items");
             Console.WriteLine(matrix.ToString());
 
@@ -59,7 +59,15 @@ namespace TestConsoleApp
 
             Console.WriteLine("Matrix");
             Console.WriteLine(matrix.ToString());
-           Console.ReadLine();
+
+            Console.WriteLine();
+
+            foreach (var go in matrix)
+            {
+                Console.Write((int)go.SpriteName + " ");
+            }
+
+            Console.ReadLine();
         }
     }
 }
