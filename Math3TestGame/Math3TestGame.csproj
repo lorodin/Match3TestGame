@@ -46,9 +46,13 @@
     <Compile Include="Controllers\StartController.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameConfigs.cs" />
+    <Compile Include="Models\Animations\AnimationState.cs" />
+    <Compile Include="Models\Animations\IAnimation.cs" />
     <Compile Include="Models\BangGameObjectModel.cs" />
     <Compile Include="Models\BonusPointsModel.cs" />
     <Compile Include="Models\GameModel.cs" />
+    <Compile Include="Models\GameModels\GameMatrix.cs" />
+    <Compile Include="Models\GameModels\GameObject.cs" />
     <Compile Include="Models\GameObjectModel.cs" />
     <Compile Include="Models\GameObjectsMatrix.cs" />
     <Compile Include="Models\GameOverButton.cs" />
