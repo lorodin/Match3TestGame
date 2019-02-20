@@ -1,4 +1,5 @@
 ﻿using Math3TestGame.Controllers;
+using Math3TestGame.Tools;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -46,7 +47,7 @@ namespace Math3TestGame
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            GameConfigs.GetInstance().DefaultSpriteMap = Content.Load<Texture2D>("sprites_map");
+            TextureHelper.GetInstance().DefaultSpriteMap = Content.Load<Texture2D>("sprites_map");
             GameConfigs.GetInstance().DefaultFont = Content.Load<SpriteFont>("test_font");
             GameConfigs.GetInstance().Center = new Point(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2);
             GameConfigs.GetInstance().Widht = Window.ClientBounds.Width;

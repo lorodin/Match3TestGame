@@ -12,13 +12,14 @@ namespace Math3TestGame.Models.GameModels
     public class GameMatrix:IEnumerable<GameObject>
     {
         private GameObject first;
-        private int w = 4;
-        private int h = 4;
+        private int w = 10;
+        private int h = 10;
 
         private Random rnd;
 
         public MatrixState State { get; private set; } = MatrixState.NONE;
 
+        private GameObjectFactory gFactory;
         
         public IEnumerator<GameObject> GetEnumerator()
         {
@@ -48,9 +49,11 @@ namespace Math3TestGame.Models.GameModels
             GameObject left = null;
             GameObject current = null;
 
+            gFactory = GameObjectFactory.GetInstance();
+
             for (int i = 0; i < w; i++)
             {
-                current = new GameObject(Rectangle.Empty, rndSpriteName(), null, null, current);
+                current = gFactory.GetGameObject(Rectangle.Empty, null, null, current);
 
                 current.Value = new Point(i, 0);
 
@@ -62,7 +65,40 @@ namespace Math3TestGame.Models.GameModels
                 {
                     var top = (left.Top != null && left.Top.Right != null) ? left.Top.Right : null;
 
-                    var ni = new GameObject(Rectangle.Empty, rndSpriteName(), left, null, top);
+                    var ni = gFactory.GetGameObject(Rectangle.Empty, left, null, top);
+
+                    ni.Value = new Point(i, j);
+
+                    left = ni;
+                }
+            }
+        }
+        
+        public GameMatrix(Rectangle[,] regions, int w, int h)
+        {
+            rnd = new Random();
+
+            this.w = w;
+            this.h = h;
+
+            GameObject left = null;
+            GameObject current = null;
+
+            gFactory = GameObjectFactory.GetInstance();
+
+            for (int i = 0; i < w; i++)
+            {
+                current = gFactory.GetGameObject(regions[i, 0], null, null, current);
+                
+                left = current;
+
+                if (i == 0) first = current;
+
+                for(int j = 1; j < h; j++)
+                {
+                    var top = (left.Top != null && left.Top.Right != null) ? left.Top.Right : null;
+
+                    var ni = gFactory.GetGameObject(regions[i, j], left, null, top);
 
                     ni.Value = new Point(i, j);
 
@@ -71,18 +107,7 @@ namespace Math3TestGame.Models.GameModels
             }
         }
 
-        private SpriteName rndSpriteName()
-        {
-            switch(rnd.Next(1, 6))
-            {
-                case 1: return SpriteName.GameObject1;
-                case 2: return SpriteName.GameObject2;
-                case 3: return SpriteName.GameObject3;
-                case 4: return SpriteName.GameObject4;
-            }
-
-            return SpriteName.GameObject5;
-        }
+       
 
 
         private void FindKilled()
@@ -198,34 +223,77 @@ namespace Math3TestGame.Models.GameModels
                
                 while(top != null && !top.Visible)
                 {
-                    if(top == current)
-                    {
-                        top = CreateNewItem(top);
-                        current = top;
-                    }
-                    else
-                    {
-                        top = CreateNewItem(top);
-                    }
+                    top.NewLife();
                     State = MatrixState.CREATE;
                     top = top.Bottom;
                 }
-
-                //while (current.Top != null) current = current.Top;
+                
                 current = current.Right;
             }
         }
 
         private GameObject CreateNewItem(GameObject item)
         {
-            item = new GameObject(item, rndSpriteName());
+            item = gFactory.GetGameObject(item);
+
             if (item.Left == null && item.Top == null) first = item;
+
             return item;
         }
 
         public void TestSwap()
         {
             SwapV(first.Bottom.Bottom, first.Bottom.Bottom.Bottom);
+        }
+        
+        public void TestHSwap()
+        {
+            SwapH(first.Bottom.Right.Right, first.Bottom.Right.Right.Right);
+        }
+
+        public void SwapH(GameObject go1, GameObject go2)
+        {
+            if (go1 == null || go2 == null) return;
+
+            var left = go1.Right == go2 ? go1 : go2;
+
+            if (left == null) return;
+
+            var right = go1.Left == go2 ? go1 : go2;
+
+            if (right == null) return;
+
+            var ll = left.Left;
+            var lt = left.Top;
+            var lb = left.Bottom;
+
+            var rr = right.Right;
+            var rt = right.Top;
+            var rb = right.Bottom;
+
+            if (ll != null) ll.Right = right;
+            if (lt != null) lt.Bottom = right;
+            if (lb != null) lb.Top = right;
+
+            if (rr != null) rr.Left = left;
+            if (rt != null) rt.Bottom = left;
+            if (rb != null) rb.Top = left;
+
+            left.Top = rt;
+            left.Bottom = rb;
+            left.Right = rr;
+
+            right.Top = lt;
+            right.Bottom = lb;
+            right.Left = ll;
+
+            right.Right = left;
+            left.Left = right;
+
+            left.MoveH();
+            right.MoveH();
+
+            if (first == left) first = right;
         }
 
         public void SwapV(GameObject go1, GameObject go2)
@@ -267,10 +335,17 @@ namespace Math3TestGame.Models.GameModels
             bottom.Left = tl;
             bottom.Right = tr;
 
-            top.Move(bottom.Region.X, bottom.Region.Y);
-            bottom.Move(top.Region.X, top.Region.Y);
+            top.MoveV();
+            bottom.MoveV();
 
             if (top == first) first = bottom;
+            else if (bottom == first) first = top;
+        }
+
+        public void Next(MatrixState step)
+        {
+            this.State = step;
+            Next();
         }
 
         public void Next()
@@ -279,12 +354,17 @@ namespace Math3TestGame.Models.GameModels
             {
                 case MatrixState.NONE:
                     FindKilled();
+                    //if (State == MatrixState.NONE) DropDownItems();
+                    if (State == MatrixState.NONE) CreateNewItems();
                     break;
                 case MatrixState.KILL:
                     DropDownItems();
+                    if (State == MatrixState.NONE) CreateNewItems();
+                    //if (State == MatrixState.NONE) FindKilled();
                     break;
                 case MatrixState.DROP_DOWN:
                     CreateNewItems();
+                    //if (State == MatrixState.NONE) DropDownItems();
                     break;
                 case MatrixState.CREATE:
                     FindKilled();
@@ -295,6 +375,37 @@ namespace Math3TestGame.Models.GameModels
 
 
         #region DEBUG
+
+        public string GetItemsPositions()
+        {
+            string result = "";
+
+            GameObject current = first;
+
+            while (current != null)
+            {
+                if (current == null) break;
+
+                result += "(" + current.NewPosition.X +" " +current.NewPosition.Y + ") ";
+
+                var left = current;
+
+                GameObject right;
+
+                while ((right = left.Right) != null)
+                {
+                    result += "(" + right.NewPosition.X + " " + right.NewPosition.Y + ") ";
+
+                    left = right;
+                }
+
+                current = current.Bottom;
+
+                result += "\r\n";
+            }
+
+            return result;
+        }
 
         public string GetKilledItems()
         {

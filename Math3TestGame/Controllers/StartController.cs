@@ -10,34 +10,30 @@ using System.Threading.Tasks;
 
 namespace Math3TestGame.Controllers
 {
-    public class StartController:Controller, IRenderer
+    public class StartController:Controller
     {
         private PlayButtonModel playButton;
         public StartController() : base(ControllerNames.Start)
         {
-            renderer = this;
             playButton = new PlayButtonModel();
-        }
 
-        public void Draw(SpriteBatch sbatch)
-        {
-            playButton.Draw(sbatch);
+            renderer = new StartRenderer(playButton);
         }
-
+        
         public override void MouseClick(int x, int y)
         {
-            if (playButton.Rect.Contains(x, y)) ChangeController(ControllerNames.Play);
+            if (playButton.Region.Contains(x, y)) ChangeController(ControllerNames.Play);
         }
 
         public override void MouseMove(int x, int y)
         {
-            if(playButton.Rect.Contains(x, y))
+            if(playButton.Region.Contains(x, y))
             {
-                playButton.State = PlayButtonState.HOVER;
+                playButton.PlayButtonState = PlayButtonState.HOVER;
             }
             else
             {
-                playButton.State = PlayButtonState.NONE;
+                playButton.PlayButtonState = PlayButtonState.NONE;
             }
         }
 

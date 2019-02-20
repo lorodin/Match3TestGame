@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Math3TestGame.Models.GameModels;
+using Math3TestGame.Models.Interfaces;
 using Math3TestGame.Tools;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Math3TestGame.Models
 {
-    public class PlayButtonModel : IDrawableModel
+    public class PlayButtonModel : IDrawableModel, IDynamic
     {
-        private int AnimationStep = 0;
-
-        public PlayButtonState State { get; set; } = PlayButtonState.NONE;
+        public PlayButtonState PlayButtonState { get; set; } = PlayButtonState.NONE;
 
         private TextureHelper tHelper;
         private GameConfigs gc;
@@ -21,13 +21,21 @@ namespace Math3TestGame.Models
         private int ddt = 0;
 
 
-        public Rectangle Rect { get; set; }
+        public Rectangle Region { get; set; }
+
+        public SpriteName SpriteName { get; private set; } = SpriteName.PlayButton;
+
+        public int SpriteAnimationStep { get; private set; } = 0;
+
+        public SpriteAnimationState AnimationState { get; set; }
+
+        public DynamicState State { get; set; }
 
         public PlayButtonModel()
         {
             tHelper = TextureHelper.GetInstance();
             gc = GameConfigs.GetInstance();
-            Rect = new Rectangle(gc.Center.X - 101, gc.Center.Y - 25, 202, 50);
+            Region = new Rectangle(gc.Center.X - 101, gc.Center.Y - 25, 202, 50);
         }
 
         public void Update(int dt)
@@ -38,14 +46,10 @@ namespace Math3TestGame.Models
             {
                 ddt = 0;
 
-                if (State == PlayButtonState.NONE && AnimationStep > 0) AnimationStep--;
-                else if(State == PlayButtonState.HOVER && AnimationStep < 4)  AnimationStep++;   
+                if (PlayButtonState == PlayButtonState.NONE && SpriteAnimationStep > 0) SpriteAnimationStep--;
+                else if(PlayButtonState == PlayButtonState.HOVER && SpriteAnimationStep < 4)
+                    SpriteAnimationStep++;   
             }
-        }
-
-        public void Draw(SpriteBatch sb)
-        {
-            sb.Draw(gc.DefaultSpriteMap, Rect, tHelper.GetTextureRegion(SpriteName.PlayButton, AnimationStep), Color.White);
         }
     }
 

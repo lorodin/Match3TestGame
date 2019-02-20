@@ -1,5 +1,6 @@
 ﻿using Math3TestGame.Models;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,8 @@ namespace Math3TestGame.Tools
         private static TextureHelper instance;
 
         private Dictionary<SpriteName, Rectangle[]> textureRegions;
+
+        public Texture2D DefaultSpriteMap { get; set; }
 
         public static TextureHelper GetInstance()
         {

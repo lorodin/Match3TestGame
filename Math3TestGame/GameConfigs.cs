@@ -13,7 +13,6 @@ namespace Math3TestGame
         private static GameConfigs instance;
 
         public SpriteFont DefaultFont { get; set; }
-        public Texture2D DefaultSpriteMap { get; set; }
 
         public Point Center { get; set; }
 
@@ -23,8 +22,8 @@ namespace Math3TestGame
 
         private int regionCounts = 10;
         
-        public int RegionWidth { get; private set; }
-        public int RegionHeight { get; private set; }
+        public int RegionWidth { get; set; }
+        public int RegionHeight { get; set; }
 
         public int ADTime { get; } = 10;
 
