@@ -29,11 +29,11 @@ namespace Math3TestGame.Controllers
         {
             if(playButton.Region.Contains(x, y))
             {
-                playButton.PlayButtonState = PlayButtonState.HOVER;
+                playButton.PlayButtonState = ButtonState.HOVER;
             }
             else
             {
-                playButton.PlayButtonState = PlayButtonState.NONE;
+                playButton.PlayButtonState = ButtonState.NONE;
             }
         }
 

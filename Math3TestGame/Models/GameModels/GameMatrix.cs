@@ -9,9 +9,11 @@ using System.Threading.Tasks;
 
 namespace Math3TestGame.Models.GameModels
 {
-    public class GameMatrix:IEnumerable<GameObject>
+    public delegate void KilledItem();
+
+    public class GameMatrix:IEnumerable<AGameObject>
     {
-        private GameObject first;
+        private AGameObject first;
         private int w = 10;
         private int h = 10;
 
@@ -21,7 +23,7 @@ namespace Math3TestGame.Models.GameModels
 
         private GameObjectFactory gFactory;
         
-        public IEnumerator<GameObject> GetEnumerator()
+        public IEnumerator<AGameObject> GetEnumerator()
         {
             var current = first;
             while(current != null)
@@ -41,19 +43,20 @@ namespace Math3TestGame.Models.GameModels
             return GetEnumerator();
         }
 
+        public event KilledItem OnItemKilled;
 
         public GameMatrix()
         {
             rnd = new Random();
 
-            GameObject left = null;
-            GameObject current = null;
+            AGameObject left = null;
+            AGameObject current = null;
 
             gFactory = GameObjectFactory.GetInstance();
 
             for (int i = 0; i < w; i++)
             {
-                current = gFactory.GetGameObject(Rectangle.Empty, null, null, current);
+                current = gFactory.GetGameObject(Rectangle.Empty, this, null, null, current);
 
                 current.Value = new Point(i, 0);
 
@@ -65,7 +68,7 @@ namespace Math3TestGame.Models.GameModels
                 {
                     var top = (left.Top != null && left.Top.Right != null) ? left.Top.Right : null;
 
-                    var ni = gFactory.GetGameObject(Rectangle.Empty, left, null, top);
+                    var ni = gFactory.GetGameObject(Rectangle.Empty, this, left, null, top);
 
                     ni.Value = new Point(i, j);
 
@@ -81,14 +84,14 @@ namespace Math3TestGame.Models.GameModels
             this.w = w;
             this.h = h;
 
-            GameObject left = null;
-            GameObject current = null;
+            AGameObject left = null;
+            AGameObject current = null;
 
             gFactory = GameObjectFactory.GetInstance();
 
             for (int i = 0; i < w; i++)
             {
-                current = gFactory.GetGameObject(regions[i, 0], null, null, current);
+                current = gFactory.GetGameObject(regions[i, 0], this, null, null, current);
                 
                 left = current;
 
@@ -98,7 +101,7 @@ namespace Math3TestGame.Models.GameModels
                 {
                     var top = (left.Top != null && left.Top.Right != null) ? left.Top.Right : null;
 
-                    var ni = gFactory.GetGameObject(regions[i, j], left, null, top);
+                    var ni = gFactory.GetGameObject(regions[i, j], this, left, null, top);
 
                     ni.Value = new Point(i, j);
 
@@ -138,6 +141,7 @@ namespace Math3TestGame.Models.GameModels
                         if (count >= 3)
                         {
                             State = MatrixState.KILL;
+
                             marker.Kill();
                         }
 
@@ -232,15 +236,36 @@ namespace Math3TestGame.Models.GameModels
             }
         }
 
-        private GameObject CreateNewItem(GameObject item)
+        public void ReplaceItem(AGameObject replaced)
         {
-            item = gFactory.GetGameObject(item);
-
-            if (item.Left == null && item.Top == null) first = item;
-
-            return item;
+            ReplaceItem(replaced, BonusEffect.NONE);
         }
 
+        public void ReplaceItem(AGameObject replaced, BonusEffect bonus)
+        {
+            AGameObject ni = null;
+
+            switch (bonus)
+            {
+                case BonusEffect.LINE_V:
+                    ni = gFactory.GetLineBonusObject(replaced, LineType.V);
+                    break;
+                case BonusEffect.LINE_H:
+                    ni = gFactory.GetLineBonusObject(replaced, LineType.H);
+                    break;
+                case BonusEffect.BANG:
+                    ni = gFactory.GetBangGameObject(replaced);
+                    break;
+                default:
+                    ni = gFactory.GetGameObject(replaced);
+                    break;
+            }
+
+            if (replaced.Left == null && replaced.Top == null) first = ni;
+
+            if (OnItemKilled != null) OnItemKilled();
+        }
+        
         public void TestSwap()
         {
             SwapV(first.Bottom.Bottom, first.Bottom.Bottom.Bottom);
@@ -251,7 +276,7 @@ namespace Math3TestGame.Models.GameModels
             SwapH(first.Bottom.Right.Right, first.Bottom.Right.Right.Right);
         }
 
-        public void SwapH(GameObject go1, GameObject go2)
+        public void SwapH(AGameObject go1, AGameObject go2)
         {
             if (go1 == null || go2 == null) return;
 
@@ -296,7 +321,7 @@ namespace Math3TestGame.Models.GameModels
             if (first == left) first = right;
         }
 
-        public void SwapV(GameObject go1, GameObject go2)
+        public void SwapV(AGameObject go1, AGameObject go2)
         {
             if (go1 == null || go2 == null) return;
 
@@ -380,7 +405,7 @@ namespace Math3TestGame.Models.GameModels
         {
             string result = "";
 
-            GameObject current = first;
+            AGameObject current = first;
 
             while (current != null)
             {
@@ -390,7 +415,7 @@ namespace Math3TestGame.Models.GameModels
 
                 var left = current;
 
-                GameObject right;
+                AGameObject right;
 
                 while ((right = left.Right) != null)
                 {
@@ -411,7 +436,7 @@ namespace Math3TestGame.Models.GameModels
         {
             string result = "";
 
-            GameObject current = first;
+            AGameObject current = first;
 
             while (current != null)
             {
@@ -421,7 +446,7 @@ namespace Math3TestGame.Models.GameModels
 
                 var left = current;
 
-                GameObject right;
+                AGameObject right;
 
                 while ((right = left.Right) != null)
                 {
@@ -442,7 +467,7 @@ namespace Math3TestGame.Models.GameModels
         {
             string result = "";
 
-            GameObject current = first;
+            AGameObject current = first;
 
             while (current != null)
             {
@@ -452,7 +477,7 @@ namespace Math3TestGame.Models.GameModels
 
                 var left = current;
 
-                GameObject right;
+                AGameObject right;
 
                 while ((right = left.Right) != null)
                 {
@@ -473,7 +498,7 @@ namespace Math3TestGame.Models.GameModels
         {
             string result = "";
 
-            GameObject current = first;
+            AGameObject current = first;
 
             while (current != null)
             {
@@ -483,7 +508,7 @@ namespace Math3TestGame.Models.GameModels
 
                 var left = current;
 
-                GameObject right;
+                AGameObject right;
 
                 while ((right = left.Right) != null)
                 {
@@ -504,7 +529,7 @@ namespace Math3TestGame.Models.GameModels
         {
             string result = "";
 
-            GameObject current = first;
+            AGameObject current = first;
 
             while(current != null)
             {
@@ -514,7 +539,7 @@ namespace Math3TestGame.Models.GameModels
 
                 var left = current;
 
-                GameObject right;
+                AGameObject right;
 
                 while((right = left.Right) != null)
                 {

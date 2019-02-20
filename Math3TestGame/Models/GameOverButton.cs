@@ -1,47 +1,58 @@
-﻿using System;
+﻿using Math3TestGame.Models.GameModels;
+using Math3TestGame.Models.Interfaces;
+using Math3TestGame.Tools;
+using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Math3TestGame.Models.GameModels;
-using Math3TestGame.Models.Interfaces;
-using Math3TestGame.Tools;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Math3TestGame.Models
 {
-    public class GameOverButton : IDrawableModel
+    public class GameOverButton : IDrawableModel, IDynamic
     {
-        public Rectangle Rect { get; set; }
-        public Rectangle Region { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Rectangle Region { get; set; }
 
-        public SpriteName SpriteName => throw new NotImplementedException();
+        public SpriteName SpriteName { get; private set; }
 
-        public int SpriteAnimationStep => throw new NotImplementedException();
+        public int SpriteAnimationStep { get; set; }
 
-        public SpriteAnimationState AnimationState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public SpriteAnimationState AnimationState { get; set; }
+
+        public DynamicState State { get; set; }
 
         private GameConfigs gc;
-        private TextureHelper tHelper;
-        
+
+        public ButtonState ButtonState { get; set; }
+
+        private int ddt = 0;
 
         public GameOverButton()
         {
             gc = GameConfigs.GetInstance();
-            tHelper = TextureHelper.GetInstance();
-
-            Rect = new Rectangle(gc.Center.X - gc.RegionWidth / 2, gc.Center.Y + gc.RegionHeight / 2, gc.RegionWidth, 20);
-        }
-
-        public void Draw(SpriteBatch sb)
-        {
-            sb.Draw(tHelper.DefaultSpriteMap, Rect, tHelper.GetTextureRegion(SpriteName.GameOverButton, 0), Color.White, 0, Vector2.Zero, SpriteEffects.None, 1);
+            Region = new Rectangle(gc.Center.X - 50, gc.Center.Y + 20, 100, 30);
+            SpriteName = SpriteName.GameOverButton;
         }
 
         public void Update(int dt)
         {
-            throw new NotImplementedException();
+            ddt += dt;
+
+            if(ddt > gc.ADTime)
+            {
+                ddt = 0;
+                if(ButtonState == ButtonState.HOVER && SpriteAnimationStep != 2)
+                {
+                    SpriteAnimationStep++;
+                    if (SpriteAnimationStep > 2) SpriteAnimationStep = 2;
+                }
+                else if(SpriteAnimationStep != 0)
+                {
+                    SpriteAnimationStep--;
+                    if (SpriteAnimationStep < 0) SpriteAnimationStep = 0;
+                }
+            }
         }
     }
 }

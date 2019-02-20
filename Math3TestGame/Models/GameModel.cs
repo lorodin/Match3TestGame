@@ -24,20 +24,34 @@ namespace Math3TestGame.Models
 
         public bool CanClientInput { get; private set; } = false;
 
+        private SwapModel clientSwapModel;
+
         public GameModel(GameMatrix gameMatrix)
         {
             GameMatrix = gameMatrix;
         }
 
 
-        public void ClientSwapV(GameObject go1, GameObject go2)
+        public void ClientSwapV(AGameObject go1, AGameObject go2)
         {
             GameMatrix.SwapV(go1, go2);
+            clientSwapModel = new SwapModel
+            {
+                GameObject1 = go1,
+                GameObject2 = go2,
+                Direction = SwapDirection.VERTICAL
+            };
         }
 
-        public void ClientSwapH(GameObject go1, GameObject go2)
+        public void ClientSwapH(AGameObject go1, AGameObject go2)
         {
             GameMatrix.SwapH(go1, go2);
+            clientSwapModel = new SwapModel
+            {
+                GameObject1 = go1,
+                GameObject2 = go2,
+                Direction = SwapDirection.HORIZONTAL
+            };
         }
 
 
@@ -75,6 +89,24 @@ namespace Math3TestGame.Models
                 else
                 {
                     GameMatrix.Next();
+
+                    if (clientSwapModel != null && GameMatrix.State == MatrixState.NONE)
+                    {
+                        switch (clientSwapModel.Direction)
+                        {
+                            case SwapDirection.HORIZONTAL:
+                                GameMatrix.SwapH(clientSwapModel.GameObject1, clientSwapModel.GameObject2);
+                                break;
+                            case SwapDirection.VERTICAL:
+                                GameMatrix.SwapV(clientSwapModel.GameObject1, clientSwapModel.GameObject2);
+                                break;
+                        }
+                    }
+
+                    if (clientSwapModel != null)
+                    {
+                        clientSwapModel = null;
+                    }
                 }
             }
 

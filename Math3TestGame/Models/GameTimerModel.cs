@@ -11,12 +11,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Math3TestGame.Models
 {
-    //public delegate void TimerEnded();
 
     public class GameTimerModel : IDynamic, IDrawableModel
     {
-        //public event TimerEnded OnTimerEnded;
-        
         public SpriteName SpriteName { get; }
         public int SpriteAnimationStep { get; }
         public SpriteAnimationState AnimationState { get; set; }
@@ -63,7 +60,6 @@ namespace Math3TestGame.Models
             {
                 enabled = false;
                 State = DynamicState.END;
-                //if (OnTimerEnded != null) OnTimerEnded();
             }
         }
     }

@@ -13,7 +13,7 @@ namespace Math3TestGame.Models
 {
     public class PlayButtonModel : IDrawableModel, IDynamic
     {
-        public PlayButtonState PlayButtonState { get; set; } = PlayButtonState.NONE;
+        public ButtonState PlayButtonState { get; set; } = ButtonState.NONE;
 
         private TextureHelper tHelper;
         private GameConfigs gc;
@@ -46,14 +46,14 @@ namespace Math3TestGame.Models
             {
                 ddt = 0;
 
-                if (PlayButtonState == PlayButtonState.NONE && SpriteAnimationStep > 0) SpriteAnimationStep--;
-                else if(PlayButtonState == PlayButtonState.HOVER && SpriteAnimationStep < 4)
+                if (PlayButtonState == ButtonState.NONE && SpriteAnimationStep > 0) SpriteAnimationStep--;
+                else if(PlayButtonState == ButtonState.HOVER && SpriteAnimationStep < 4)
                     SpriteAnimationStep++;   
             }
         }
     }
 
-    public enum PlayButtonState
+    public enum ButtonState
     {
         HOVER = 0,
         NONE = 1

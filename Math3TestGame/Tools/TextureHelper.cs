@@ -132,8 +132,43 @@ namespace Math3TestGame.Tools
 
             textureRegions.Add(SpriteName.GameOverButton, new[]
             {
-                new Rectangle(1024, 1380, 256, 74)
+                new Rectangle(1024, 1380, 256, 74),
+                new Rectangle(1280, 1380, 256, 74),
+                new Rectangle(1536, 1380, 256, 74),
+
             });
+
+            textureRegions.Add(SpriteName.BangEffect, new[]
+            {
+                new Rectangle(0, 2404, 256, 256),
+                new Rectangle(256, 2404, 256, 256),
+                new Rectangle(512, 2404, 256, 256),
+                new Rectangle(768, 2404, 256, 256),
+                new Rectangle(1024, 2404, 256, 256),
+                new Rectangle(1280, 2404, 256, 256),
+                new Rectangle(1536, 2404, 256, 256),
+                new Rectangle(1792, 2404, 256, 256)
+            });
+
+            textureRegions.Add(SpriteName.LineHEffect, new[]
+            {
+                new Rectangle(0, 2148, 256, 256),
+                new Rectangle(256, 2148, 256, 256),
+                new Rectangle(512, 2148, 256, 256),
+                new Rectangle(768, 2148, 256, 256),
+                new Rectangle(1024, 2148, 256, 256)
+            });
+
+            textureRegions.Add(SpriteName.LineVEffect, new[]
+            {
+                new Rectangle(1280, 2148, 256, 256),
+                new Rectangle(1532, 2148, 256, 256),
+                new Rectangle(1788, 2148, 256, 256),
+                new Rectangle(2048, 2148, 256, 256),
+                new Rectangle(2304, 2148, 256, 256)
+            });
+
+
         }
 
 
@@ -159,6 +194,9 @@ namespace Math3TestGame.Tools
         LineH = 8,
         FireBall = 9,
         GameOverBG = 10,
-        GameOverButton = 11
+        GameOverButton = 11,
+        BangEffect = 12,
+        LineVEffect = 13,
+        LineHEffect = 14
     }
 }

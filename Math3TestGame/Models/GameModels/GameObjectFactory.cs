@@ -25,19 +25,29 @@ namespace Math3TestGame.Models.GameModels
             rnd = new Random();
         }
 
-        public GameObject GetGameObject(GameObject gameObject)
+        public AGameObject GetBangGameObject(AGameObject cloned)
         {
-            return new GameObject(gameObject, RandomSpriteName());
+            return new BangGameObject(cloned);
         }
 
-        public GameObject GetGameObject(int x, int y)
+        public AGameObject GetLineBonusObject(AGameObject cloned, LineType type)
         {
-            return new GameObject(new Rectangle(x, y, 256, 256), RandomSpriteName());
+            return new LineGameObject(cloned, type);
         }
 
-        public GameObject GetGameObject(Rectangle region, GameObject left = null, GameObject right = null, GameObject top = null, GameObject bottom = null)
+        public AGameObject GetGameObject(AGameObject gameObject)
         {
-            return new GameObject(region, RandomSpriteName(), left, right, top, bottom);
+            return new SimpleGameObject(gameObject, RandomSpriteName());
+        }
+
+        public AGameObject GetGameObject(int x, int y, GameMatrix parent)
+        {
+            return new SimpleGameObject(new Rectangle(x, y, 256, 256), RandomSpriteName(), parent);
+        }
+
+        public AGameObject GetGameObject(Rectangle region, GameMatrix parent, AGameObject left = null, AGameObject right = null, AGameObject top = null, AGameObject bottom = null)
+        {
+            return new SimpleGameObject(region, RandomSpriteName(), parent, left, right, top, bottom);
         }
         
 
@@ -48,7 +58,7 @@ namespace Math3TestGame.Models.GameModels
                 case 1: return SpriteName.GameObject1;
                 case 2: return SpriteName.GameObject2;
                 case 3: return SpriteName.GameObject3;
-                //case 4: return SpriteName.GameObject4;
+                case 4: return SpriteName.GameObject4;
             }
 
             return SpriteName.GameObject5;

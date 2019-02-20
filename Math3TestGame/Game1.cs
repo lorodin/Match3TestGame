@@ -65,6 +65,9 @@ namespace Math3TestGame
                 case ControllerNames.Start:
                     currentController = new StartController();
                     break;
+                case ControllerNames.GameOver:
+                    currentController = new GameOverController();
+                    break;
             }
 
             currentController.OnChangeController += (n) =>

@@ -24,7 +24,7 @@ namespace Math3TestGame.Controllers
 
         private GameConfigs gc;
 
-        private GameObject selected;
+        private AGameObject selected;
 
         public PlayController() : base(ControllerNames.Play)
         {
@@ -44,6 +44,10 @@ namespace Math3TestGame.Controllers
 
             gameModel = new GameModel(gameMatrix);
 
+            gameMatrix.OnItemKilled += () =>
+            {
+                bonusPointsModel.Points += 1;
+            };
 
             gameTimerModel = new GameTimerModel();
             bonusPointsModel = new BonusPointsModel();
@@ -82,8 +86,11 @@ namespace Math3TestGame.Controllers
                             selected = null;
                             return;
                         }
-                    }
 
+                        selected.Selected = false;
+                        selected = null;
+                    }
+                    
                     selected = go;
                     selected.Selected = true;
                 }    
@@ -97,6 +104,11 @@ namespace Math3TestGame.Controllers
 
         public override void Update(int dt)
         {
+            if (gameModel.GameOver)
+            {
+                ChangeController(ControllerNames.GameOver);
+                return;
+            }
             gameModel.Update(dt);
         }
     }

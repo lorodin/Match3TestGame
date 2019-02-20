@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Math3TestGame.Models;
+using Math3TestGame.Models.BonusEffects;
 using Math3TestGame.Tools;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -35,10 +36,45 @@ namespace Math3TestGame.Renders
 
             foreach(var go in gameModel.GameMatrix)
             {
-                //sb.Draw(tHelper.DefaultSpriteMap, Rect, tHelper.GetTextureRegion(SpriteName.GameOverButton, 0), Color.White, 0, Vector2.Zero, SpriteEffects.None, 1);
-                if (!go.Visible) continue;
-
-                sbatch.Draw(tHelper.DefaultSpriteMap, go.Region, tHelper.GetTextureRegion(go.SpriteName, go.SpriteAnimationStep), Color.White, 0, Vector2.Zero, SpriteEffects.None, 0);
+                if (go.Visible) { 
+                    sbatch.Draw(tHelper.DefaultSpriteMap, go.Region, tHelper.GetTextureRegion(go.SpriteName, go.SpriteAnimationStep), Color.White, 0, Vector2.Zero, SpriteEffects.None, 0);
+                    switch (go.Bonus)
+                    {
+                        case Models.GameModels.BonusEffect.BANG:
+                            sbatch.Draw(tHelper.DefaultSpriteMap, go.Region, tHelper.GetTextureRegion(SpriteName.Bang, 0), Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.3f);
+                            break;
+                        case Models.GameModels.BonusEffect.LINE_H:
+                            sbatch.Draw(tHelper.DefaultSpriteMap, go.Region, tHelper.GetTextureRegion(SpriteName.LineH, 0), Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.3f);
+                            break;
+                        case Models.GameModels.BonusEffect.LINE_V:
+                            sbatch.Draw(tHelper.DefaultSpriteMap, go.Region, tHelper.GetTextureRegion(SpriteName.LineV, 0), Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.3f);
+                            break;
+                    }
+                }
+                foreach(var be in go.BonusEffects)
+                {
+                    if (be.State == Models.Interfaces.DynamicState.END) continue;
+                    switch (be.BonusType)
+                    {
+                        case Models.GameModels.BonusEffect.BANG:
+                            sbatch.Draw(tHelper.DefaultSpriteMap, go.Region, tHelper.GetTextureRegion(SpriteName.BangEffect, be.AnimationStep), Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.5f);
+                            break;
+                        case Models.GameModels.BonusEffect.LINE_H:
+                            sbatch.Draw(tHelper.DefaultSpriteMap, go.Region, 
+                                        tHelper.GetTextureRegion(SpriteName.LineHEffect, be.AnimationStep), 
+                                        Color.White, 0, Vector2.Zero, 
+                                        ((LineBonusEffect)be).Direction == LineBonusEffectDirection.LR ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 
+                                        0.5f);
+                            break;
+                        case Models.GameModels.BonusEffect.LINE_V:
+                            sbatch.Draw(tHelper.DefaultSpriteMap, go.Region,
+                                        tHelper.GetTextureRegion(SpriteName.LineVEffect, be.AnimationStep),
+                                        Color.White, 0, Vector2.Zero,
+                                        ((LineBonusEffect)be).Direction == LineBonusEffectDirection.BT ? SpriteEffects.None : SpriteEffects.FlipVertically,
+                                        0.5f);
+                            break;
+                    }
+                }
             }
         }
     }

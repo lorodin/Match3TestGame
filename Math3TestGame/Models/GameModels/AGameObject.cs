@@ -1,4 +1,4 @@
-﻿using Math3TestGame.Models.Animations;
+﻿using Math3TestGame.Models.BonusEffects;
 using Math3TestGame.Models.Interfaces;
 using Math3TestGame.Tools;
 using Microsoft.Xna.Framework;
@@ -10,18 +10,18 @@ using System.Threading.Tasks;
 
 namespace Math3TestGame.Models.GameModels
 {
-    public delegate void Killed(GameObject go);
+    public delegate void Killed(AGameObject go);
 
-    public class GameObject
+    public abstract class AGameObject
     {
-        public GameObject Left { get; set; }
-        public GameObject Right { get; set; }
-        public GameObject Top { get; set; }
-        public GameObject Bottom { get; set; }
+        public AGameObject Left { get; set; }
+        public AGameObject Right { get; set; }
+        public AGameObject Top { get; set; }
+        public AGameObject Bottom { get; set; }
 
-        public Rectangle Region { get; set; }
+        public abstract Rectangle Region { get; set; }
 
-        public Point NewPosition { get; private set; }
+        public abstract Point NewPosition { get; protected set; }
 
         public bool Visible { get; set; } = true;
         private bool selected = false;
@@ -52,27 +52,33 @@ namespace Math3TestGame.Models.GameModels
 
         public event Killed OnKilled;
 
-        public int SpriteAnimationStep { get; private set; }
-        
-        public SpriteName SpriteName { get; private set; }
+        public abstract int SpriteAnimationStep { get; protected set; }
+
+        public abstract SpriteName SpriteName { get; protected set; }
 
         public PositionAnimationState Moving { get; private set; }
 
         public SpriteAnimationState AnimationState { get; set; } = SpriteAnimationState.SHOW;
 
-        private GameObjectFactory gFactory;
+        protected GameObjectFactory gFactory;
 
-        public List<IDynamic> BonusEffects { get; private set; } = new List<IDynamic>();
+        public List<IBonusEffect> BonusEffects { get; private set; } = new List<IBonusEffect>();
+
+        public BonusEffect Bonus { get; set; } = BonusEffect.NONE;
 
         private int ddt = 0;
 
-        private GameConfigs gc;
+        protected GameConfigs gc;
 
         private int selectedDirection = 1;
 
-        public GameObject(Rectangle region, SpriteName spriteName, GameObject left = null, GameObject right = null, GameObject top = null, GameObject bottom = null)
+        public abstract GameMatrix Parent { get; protected set; }
+
+        public AGameObject(Rectangle region, SpriteName spriteName, GameMatrix parent, AGameObject left = null, AGameObject right = null, AGameObject top = null, AGameObject bottom = null)
         {
             Region = region;
+
+            this.Parent = parent;
 
             NewPosition = new Point(region.X, region.Y);
 
@@ -97,50 +103,82 @@ namespace Math3TestGame.Models.GameModels
             gc = GameConfigs.GetInstance();
         }
         
-        public GameObject(GameObject item, SpriteName sprite):this(item.Region, sprite, item.Left, item.Right, item.Top, item.Bottom)
+        public AGameObject(AGameObject item, SpriteName sprite):this(item.Region, sprite, item.Parent, item.Left, item.Right, item.Top, item.Bottom)
         {
         }
 
 
+        
         public void NewLife()
         {
-            Visible = true;
+            if (Left != null) Region = new Rectangle(Left.NewPosition.X + gc.RegionWidth, Left.NewPosition.Y, gc.RegionWidth, gc.RegionHeight);
+            else if (Right != null) Region = new Rectangle(Right.NewPosition.X - gc.RegionWidth, Right.NewPosition.Y, gc.RegionWidth, gc.RegionHeight);
 
-            AnimationState = SpriteAnimationState.SHOW;
-            Moving = PositionAnimationState.NONE;
+            Parent.ReplaceItem(this);
+        }
 
-            SpriteName = gFactory.RandomSpriteName();
+        private void KillLeftLine()
+        {
+            if (Left == null) return;
+            Left.Kill(new LineBonusEffect(LineBonusEffectDirection.RL));
+        }
 
-            SpriteAnimationStep = 8;
+        private void KillRightLine()
+        {
+            if (Right == null) return;
+            Right.Kill(new LineBonusEffect(LineBonusEffectDirection.LR));
+        }
 
-            Region = new Rectangle(NewPosition, new Point(gc.RegionWidth, gc.RegionHeight));
+        private void KillTopLine()
+        {
+            if (Top == null) return;
+            Top.Kill(new LineBonusEffect(LineBonusEffectDirection.BT));
+        }
 
-            if(Left != null)
+        private void KillBottomLine()
+        {
+            if (Bottom == null) return;
+            Bottom.Kill(new LineBonusEffect(LineBonusEffectDirection.TB));
+        }
+
+        public void Kill(IBonusEffect bEffect)
+        {
+            if (BonusEffects.Count != 0) return;
+            BonusEffects.Add(bEffect);
+            if (bEffect.BonusType == BonusEffect.LINE_H || bEffect.BonusType == BonusEffect.LINE_V)
             {
-                Region = new Rectangle(Left.NewPosition.X + gc.RegionWidth, Left.NewPosition.Y, gc.RegionWidth, gc.RegionHeight);
-            }else if(Right != null)
-            {
-                Region = new Rectangle(Right.NewPosition.X - gc.RegionWidth, Right.NewPosition.Y, gc.RegionWidth, gc.RegionHeight);
+                ((LineBonusEffect)bEffect).BeforeLastStep += (effect) =>
+                {
+                    switch (effect.Direction)
+                    {
+                        case LineBonusEffectDirection.LR:
+                            KillRightLine();
+                            break;
+                        case LineBonusEffectDirection.RL:
+                            KillLeftLine();
+                            break;
+                        case LineBonusEffectDirection.TB:
+                            KillBottomLine();
+                            break;
+                        case LineBonusEffectDirection.BT:
+                            KillTopLine();
+                            break;
+                    }        
+                };
             }
-
-            /*if(hKilled >= 3 && vKilled >= 3)
-            {
-                
-            }*/
-
-            hKilled = 0;
-            vKilled = 0;
+            Kill();
         }
 
-        public void Kill()
-        {
-            AnimationState = SpriteAnimationState.HIDE;
-        }
+        public abstract void Kill();
         
-
-        private void KillComplete()
+        protected bool CanKilled()
         {
-
+            try {
+                return AnimationState == SpriteAnimationState.NONE && Visible;// && BonusEffects.Count == 0;
+            } catch (Exception e)
+            {
+                return false;
+            }
         }
 
         public void MoveH()
@@ -158,7 +196,6 @@ namespace Math3TestGame.Models.GameModels
 
         public void MoveV()
         {
-            //if (newPosition.X == x && newPosition.Y == y) return;
             AnimationState = SpriteAnimationState.NONE;
             if (Left != null)
                 NewPosition = new Point(Left.NewPosition.X + gc.RegionWidth, Left.NewPosition.Y);
@@ -228,10 +265,41 @@ namespace Math3TestGame.Models.GameModels
         {
             return Moving != PositionAnimationState.NONE || (AnimationState != SpriteAnimationState.NONE && AnimationState != SpriteAnimationState.SELECT) || BonusEffects.Count != 0;
         }
+        
+        private void BangNear()
+        {
+            if (Left != null)
+            {
+                if (Left.Top != null) Left.Top.Kill(new BangBonusEffect());
+                Left.Kill(new BangBonusEffect());
+            }
+            if (Top != null)
+            {
+                if (Top.Right != null) Top.Right.Kill(new BangBonusEffect());
+                Top.Kill(new BangBonusEffect());
+            }
+            if (Right != null)
+            {
+                if (Right.Bottom != null) Right.Bottom.Kill(new BangBonusEffect());
+                Right.Kill(new BangBonusEffect());
+            }
+            if (Bottom != null)
+            {
+                if (Bottom.Left != null) Bottom.Left.Kill(new BangBonusEffect());
+                Bottom.Kill();
+            }
+
+            AnimationState = SpriteAnimationState.HIDE;
+        }
+
+        protected void SetBonusEffect(IBonusEffect effect)
+        {
+            BonusEffects.Add(effect);
+        }
 
         public void Update(int dt)
         {
-            if (Moving == PositionAnimationState.NONE && AnimationState == SpriteAnimationState.NONE) return;
+            if (Moving == PositionAnimationState.NONE && AnimationState == SpriteAnimationState.NONE && BonusEffects.Count == 0) return;
 
             if(Moving == PositionAnimationState.MOVE)
             {
@@ -242,9 +310,19 @@ namespace Math3TestGame.Models.GameModels
             if(BonusEffects.Count != 0)
             {
                 int countEnd = 0;
+
                 foreach(var b in BonusEffects)
                 {
                     b.Update(dt);
+                    if(b.State == DynamicState.END)
+                    {
+                        switch (b.BonusType)
+                        {
+                            case BonusEffect.WAIT_BANG:
+                                BangNear();
+                                break;
+                        }
+                    }
                     countEnd += b.State == DynamicState.END || b.State == DynamicState.STOP ? 1 : 0;
                 }
 
@@ -279,9 +357,9 @@ namespace Math3TestGame.Models.GameModels
                 else if(AnimationState == SpriteAnimationState.HIDE)
                 {
                     SpriteAnimationStep++;
-                    if(SpriteAnimationStep == 8)
+                    if(SpriteAnimationStep >= 9)
                     {
-                        SpriteAnimationStep = 8;
+                        SpriteAnimationStep = 9;
                         AnimationState = SpriteAnimationState.NONE;
                         Visible = false;
                     }
@@ -300,7 +378,8 @@ namespace Math3TestGame.Models.GameModels
         NONE = 0,
         BANG = 1,
         LINE_V = 2,
-        LINE_H = 3
+        LINE_H = 3,
+        WAIT_BANG = 4
     }
     
     public enum PositionAnimationState
