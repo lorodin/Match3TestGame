@@ -235,29 +235,21 @@ namespace Math3TestGame.Models.GameModels
                 current = current.Right;
             }
         }
-
-        public void ReplaceItem(AGameObject replaced)
-        {
-            ReplaceItem(replaced, BonusEffect.NONE);
-        }
-
-        public void ReplaceItem(AGameObject replaced, BonusEffect bonus)
+        
+        public void ReplaceItem(AGameObject replaced, BonusEffect bonus = BonusEffect.NONE)
         {
             AGameObject ni = null;
 
             switch (bonus)
             {
                 case BonusEffect.LINE_V:
-                    ni = gFactory.GetLineBonusObject(replaced, LineType.V);
+                    ni = gFactory.GetGameObject(replaced, LineType.V);
                     break;
                 case BonusEffect.LINE_H:
-                    ni = gFactory.GetLineBonusObject(replaced, LineType.H);
-                    break;
-                case BonusEffect.BANG:
-                    ni = gFactory.GetBangGameObject(replaced);
+                    ni = gFactory.GetGameObject(replaced, LineType.H);
                     break;
                 default:
-                    ni = gFactory.GetGameObject(replaced);
+                    ni = gFactory.GetGameObject(replaced, bonus);
                     break;
             }
 

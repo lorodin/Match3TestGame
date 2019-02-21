@@ -24,19 +24,16 @@ namespace Math3TestGame.Models.GameModels
         {
             rnd = new Random();
         }
+        
 
-        public AGameObject GetBangGameObject(AGameObject cloned)
-        {
-            return new BangGameObject(cloned);
-        }
-
-        public AGameObject GetLineBonusObject(AGameObject cloned, LineType type)
+        public AGameObject GetGameObject(AGameObject cloned, LineType type)
         {
             return new LineGameObject(cloned, type);
         }
 
-        public AGameObject GetGameObject(AGameObject gameObject)
+        public AGameObject GetGameObject(AGameObject gameObject, BonusEffect bonus = BonusEffect.NONE)
         {
+            if (bonus == BonusEffect.BANG) return new BangGameObject(gameObject);
             return new SimpleGameObject(gameObject, RandomSpriteName());
         }
 
