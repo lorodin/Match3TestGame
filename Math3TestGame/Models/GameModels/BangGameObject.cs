@@ -21,7 +21,6 @@ namespace Math3TestGame.Models.GameModels
         public BangGameObject(AGameObject item) : base(item, item.SpriteName)
         {
             Bonus = BonusEffect.BANG;
-            Debug.WriteLine("Bang created");
         }
 
 

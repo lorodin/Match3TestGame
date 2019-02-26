@@ -44,7 +44,7 @@ namespace Math3TestGame.Models.GameModels
                 }
                 else if (hKilled >= 4 || vKilled >= 4)
                 {
-                    Parent.ReplaceItem(this, hKilled >= 3 ? BonusEffect.LINE_H : BonusEffect.LINE_V);
+                    Parent.ReplaceItem(this, hKilled >= 4 ? BonusEffect.LINE_H : BonusEffect.LINE_V);
                     return;
                 }
             }

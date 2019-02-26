@@ -143,30 +143,40 @@ namespace Math3TestGame.Models.GameModels
 
         public void Kill(IBonusEffect bEffect)
         {
-            if (BonusEffects.Count != 0) return;
-            BonusEffects.Add(bEffect);
-            if (bEffect.BonusType == BonusEffect.LINE_H || bEffect.BonusType == BonusEffect.LINE_V)
+            //if (BonusEffects.Count != 0) return;
+            var finded = BonusEffects.FindAll((b) => {
+                var bb = b.BonusType == bEffect.BonusType;
+                return bb;
+            });
+
+            if (finded.Count == 0)
             {
-                ((LineBonusEffect)bEffect).BeforeLastStep += (effect) =>
+                BonusEffects.Add(bEffect);
+
+                if (bEffect.BonusType == BonusEffect.LINE_H || bEffect.BonusType == BonusEffect.LINE_V)
                 {
-                    switch (effect.Direction)
+                    ((LineBonusEffect)bEffect).BeforeLastStep += (effect) =>
                     {
-                        case LineBonusEffectDirection.LR:
-                            KillRightLine();
-                            break;
-                        case LineBonusEffectDirection.RL:
-                            KillLeftLine();
-                            break;
-                        case LineBonusEffectDirection.TB:
-                            KillBottomLine();
-                            break;
-                        case LineBonusEffectDirection.BT:
-                            KillTopLine();
-                            break;
-                    }        
-                };
+                        switch (effect.Direction)
+                        {
+                            case LineBonusEffectDirection.LR:
+                                KillRightLine();
+                                break;
+                            case LineBonusEffectDirection.RL:
+                                KillLeftLine();
+                                break;
+                            case LineBonusEffectDirection.TB:
+                                KillBottomLine();
+                                break;
+                            case LineBonusEffectDirection.BT:
+                                KillTopLine();
+                                break;
+                        }
+                    };
+                }
+
+                Kill();
             }
-            Kill();
         }
 
         public abstract void Kill();
@@ -311,7 +321,21 @@ namespace Math3TestGame.Models.GameModels
             {
                 int countEnd = 0;
 
-                foreach(var b in BonusEffects)
+                for (int i = 0; i < BonusEffects.Count; i++) {
+                    BonusEffects[i].Update(dt);
+                    if(BonusEffects[i].State == DynamicState.END)
+                    {
+                        switch (BonusEffects[i].BonusType)
+                        {
+                            case BonusEffect.WAIT_BANG:
+                                BangNear();
+                                break;
+                        }
+                    }
+                    countEnd += BonusEffects[i].State == DynamicState.END || BonusEffects[i].State == DynamicState.STOP ? 1 : 0;
+                }
+
+                /*foreach(var b in BonusEffects)
                 {
                     b.Update(dt);
                     if(b.State == DynamicState.END)
@@ -324,7 +348,7 @@ namespace Math3TestGame.Models.GameModels
                         }
                     }
                     countEnd += b.State == DynamicState.END || b.State == DynamicState.STOP ? 1 : 0;
-                }
+                }*/
 
                 if (countEnd == BonusEffects.Count) BonusEffects.Clear();
             }

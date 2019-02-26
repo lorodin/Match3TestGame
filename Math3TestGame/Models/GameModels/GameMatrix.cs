@@ -142,7 +142,7 @@ namespace Math3TestGame.Models.GameModels
                         {
                             State = MatrixState.KILL;
 
-                            marker.Kill();
+                            //marker.Kill();
                         }
 
                         marker = marker.Right;
@@ -175,7 +175,7 @@ namespace Math3TestGame.Models.GameModels
                         if (count >= 3)
                         {
                             State = MatrixState.KILL;
-                            marker.Kill();
+                            //marker.Kill();
                         }
 
                         marker = marker.Bottom;
@@ -184,6 +184,27 @@ namespace Math3TestGame.Models.GameModels
 
                 current = current.Right;
             }
+            if(State == MatrixState.KILL)
+            {
+                current = first;
+                while (current != null)
+                {
+                    var bottom = current;
+                    while (bottom != null)
+                    {
+                        var marker = bottom;
+
+                        if (marker.hKilled >= 3 || marker.vKilled >= 3) marker.Kill();
+
+                        bottom = bottom.Bottom;
+                    }
+
+                    while (current.Top != null) current = current.Top;
+
+                    current = current.Right;
+                }
+            }
+            
         }
 
         private void DropDownItems()
