@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Math3TestGame.Models.GameModels;
 using Math3TestGame.Models.Interfaces;
+using Math3TestGame.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -14,17 +15,16 @@ namespace Math3TestGame.Models
     {
         public Rectangle Rect { get; set; }
 
-        public BonusPointsModel BonusPoints { get; set; }
-
-        public GameTimerModel Timer { get; set; }
-        
-        public bool GameOver { get; set; } = false;
+        public GameState State { get; set; }
         
         public GameMatrix GameMatrix { get; private set; }
 
         public bool CanClientInput { get; private set; } = false;
 
         private SwapModel clientSwapModel;
+
+        public List<AUIControl> Controls { get; private set; } = new List<AUIControl>();
+
 
         public GameModel(GameMatrix gameMatrix)
         {
@@ -54,21 +54,29 @@ namespace Math3TestGame.Models
             };
         }
 
+        private int timeOver = 0;
 
+        public int SecondsOver
+        {
+            get
+            {
+                return (timeOver - timeOver % 1000) / 1000;
+            }
+        }
 
         public void Update(int dt)
         {
-            if (GameOver) return;
+            timeOver += dt;
+            
 
-            BonusPoints.Update(dt);
-
-            Timer.Update(dt);
-
-            if(Timer.State == DynamicState.END)
+            foreach(var control in Controls)
             {
-                GameOver = true;
-                return;
+                control.Update(dt);
             }
+            
+
+            if (State == GameState.GAME_OVER) return;
+
 
             bool isBusy = false;
             bool hasInvisible = false;
@@ -112,5 +120,13 @@ namespace Math3TestGame.Models
 
             CanClientInput = !isBusy && GameMatrix.State == MatrixState.NONE;
         }
+    }
+
+    public enum GameState
+    {
+        PLAY = 0,
+        PAUSE = 1,
+        WIN = 2,
+        GAME_OVER = 3
     }
 }

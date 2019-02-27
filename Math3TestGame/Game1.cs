@@ -48,9 +48,12 @@ namespace Math3TestGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             TextureHelper.GetInstance().DefaultSpriteMap = Content.Load<Texture2D>("sprites_map");
-            GameConfigs.GetInstance().DefaultFont = Content.Load<SpriteFont>("test_font");
+            GameConfigs.GetInstance().DefaultFont12 = Content.Load<SpriteFont>("test_font");
+            GameConfigs.GetInstance().DefaultFont18 = Content.Load<SpriteFont>("sprite_font18");
+            GameConfigs.GetInstance().DefaultFont24 = Content.Load<SpriteFont>("sprite_font24");
+
             GameConfigs.GetInstance().Center = new Point(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2);
-            GameConfigs.GetInstance().Widht = Window.ClientBounds.Width;
+            GameConfigs.GetInstance().Width = Window.ClientBounds.Width;
             GameConfigs.GetInstance().Height = Window.ClientBounds.Height;
 
         }
@@ -64,9 +67,6 @@ namespace Math3TestGame
                     break;
                 case ControllerNames.Start:
                     currentController = new StartController();
-                    break;
-                case ControllerNames.GameOver:
-                    currentController = new GameOverController();
                     break;
             }
 
@@ -88,28 +88,6 @@ namespace Math3TestGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
             currentController.Update(gameTime.ElapsedGameTime.Milliseconds);
-
-            //currentTime += gameTime.ElapsedGameTime.Milliseconds;
-            
-            /*if (currentTime > period)
-            {
-                currentTime -= period;
-
-                position.X += speed;
-                if (position.X > Window.ClientBounds.Width - frameWidth || position.X < 0)
-                {
-                    speed *= -1;
-                    ++currentFrame.Y;
-                    if (currentFrame.Y >= spriteSize.Y)
-                        currentFrame.Y = 0;
-                }
-
-                ++currentFrame.X;
-                if (currentFrame.X >= spriteSize.X)
-                {
-                    currentFrame.X = 0;
-                }
-            }*/
 
             MouseState currentMouseState = Mouse.GetState();
 
@@ -141,17 +119,8 @@ namespace Math3TestGame
 
             currentController.GetRenderer().Draw(spriteBatch);
 
-            /*spriteBatch.Draw(GameConfigs.GetInstance().DefaultSpriteMap, position,
-                new Rectangle(currentFrame.X * frameWidth,
-                    currentFrame.Y * frameHeight,
-                    frameWidth, frameHeight),
-
-                Color.White, 0, Vector2.Zero,
-                1, SpriteEffects.None, 0);
-
-            spriteBatch.Draw(GameConfigs.GetInstance().DefaultSpriteMap, new Rectangle(0, 0, 202, 50), new Rectangle(0, 0, 408, 100), Color.White);*/
-
             spriteBatch.End();
+
             base.Draw(gameTime);
         }
     }

@@ -23,17 +23,24 @@ namespace Math3TestGame.Renders
             gameModel = gm;
             gc = GameConfigs.GetInstance();
             tHelper = TextureHelper.GetInstance();
-
         }
 
         public void Draw(SpriteBatch sbatch)
         {
-            if (gameModel.GameOver) return;
+            if (gameModel.State == GameState.GAME_OVER) return;
 
-            sbatch.DrawString(gc.DefaultFont, "Total points: " + gameModel.BonusPoints.Points, new Vector2(gameModel.BonusPoints.Region.X, gameModel.BonusPoints.Region.Y), Color.White);
-            sbatch.DrawString(gc.DefaultFont, "Time: " + gameModel.Timer.StrSec, new Vector2(gameModel.Timer.Region.X, gameModel.Timer.Region.Y), Color.White);
-
-
+            foreach(var control in gameModel.Controls)
+            {
+                if (control.Background != SpriteName.None)
+                {
+                    sbatch.Draw(tHelper.DefaultSpriteMap, control.Region, tHelper.GetTextureRegion(control.Background, control.SpriteAnimationStep), control.BackgroundColor, 0, Vector2.Zero, SpriteEffects.None, 0.3f);
+                }
+                if (!string.IsNullOrEmpty(control.Text))
+                {
+                    sbatch.DrawString(control.Font, control.Text, control.TextPosition, control.TextColor, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.5f);
+                }
+            }
+            
             foreach(var go in gameModel.GameMatrix)
             {
                 if (go.Visible) { 

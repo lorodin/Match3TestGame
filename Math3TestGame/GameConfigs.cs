@@ -12,7 +12,9 @@ namespace Math3TestGame
     {
         private static GameConfigs instance;
 
-        public SpriteFont DefaultFont { get; set; }
+        public SpriteFont DefaultFont12 { get; set; }
+        public SpriteFont DefaultFont18 { get; set; }
+        public SpriteFont DefaultFont24 { get; set; }
 
         public Point Center { get; set; }
 
@@ -31,7 +33,11 @@ namespace Math3TestGame
 
         public float DefaultSpeed = 0.5f;
 
-        public int Widht {
+        public int GameTime { get; private set; } = 60;
+
+        public GameType GameType { get; set; } = GameType.G8x8;
+
+        public int Width {
             get {
                 return width;
             }
@@ -81,5 +87,13 @@ namespace Math3TestGame
         {
 
         }
+    }
+
+    public enum GameType
+    {
+        G8x8 = 0,
+        G6x6 = 1,
+        G8x9 = 2,
+        G6x8 = 3
     }
 }

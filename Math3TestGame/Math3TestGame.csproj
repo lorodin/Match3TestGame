@@ -42,7 +42,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Controllers\Controller.cs" />
-    <Compile Include="Controllers\GameOverController.cs" />
     <Compile Include="Controllers\PlayController.cs" />
     <Compile Include="Controllers\StartController.cs" />
     <Compile Include="Game1.cs" />
@@ -50,7 +49,6 @@
     <Compile Include="Models\BonusEffects\BangBonusEffect.cs" />
     <Compile Include="Models\BonusEffects\LineBonusEffect.cs" />
     <Compile Include="Models\BonusEffects\WaitBangEffect.cs" />
-    <Compile Include="Models\BonusPointsModel.cs" />
     <Compile Include="Models\GameModel.cs" />
     <Compile Include="Models\GameModels\BangGameObject.cs" />
     <Compile Include="Models\GameModels\GameMatrix.cs" />
@@ -58,19 +56,16 @@
     <Compile Include="Models\GameModels\GameObjectFactory.cs" />
     <Compile Include="Models\GameModels\LineGameObject.cs" />
     <Compile Include="Models\GameModels\SimpleGameObject.cs" />
-    <Compile Include="Models\GameOverButton.cs" />
-    <Compile Include="Models\GameOverDialogModel.cs" />
-    <Compile Include="Models\GameOverModel.cs" />
-    <Compile Include="Models\GameTimerModel.cs" />
+    <Compile Include="UI\AUIControl.cs" />
     <Compile Include="Models\Interfaces\IBonusEffect.cs" />
     <Compile Include="Models\Interfaces\IDrawableModel.cs" />
     <Compile Include="Models\Interfaces\IDynamic.cs" />
-    <Compile Include="Models\PlayButtonModel.cs" />
-    <Compile Include="Models\PointF.cs" />
+    <Compile Include="UI\Label.cs" />
+    <Compile Include="UI\PlayButton.cs" />
     <Compile Include="Models\SwapModel.cs" />
+    <Compile Include="UI\ToggleButton.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Renders\GameOverRenderer.cs" />
     <Compile Include="Renders\IRenderer.cs" />
     <Compile Include="Renders\PlayRenderer.cs" />
     <Compile Include="Renders\StartRenderer.cs" />

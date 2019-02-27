@@ -168,7 +168,14 @@ namespace Math3TestGame.Tools
                 new Rectangle(2304, 2148, 256, 256)
             });
 
-
+            textureRegions.Add(SpriteName.ToggleButton, new[]
+            {
+                new Rectangle(0, 2660, 256, 256),
+                new Rectangle(256, 2660, 256, 256),
+                new Rectangle(512, 2660, 256, 256),
+                new Rectangle(768, 2660, 256, 256),
+                new Rectangle(1024, 2660, 256, 256)
+            });
         }
 
 
@@ -183,20 +190,22 @@ namespace Math3TestGame.Tools
 
     public enum SpriteName
     {
-        PlayButton = 0,
-        GameObject1 = 1,
-        GameObject2 = 2,
-        GameObject3 = 3,
-        GameObject4 = 4,
-        GameObject5 = 5,
-        Bang = 6,
-        LineV = 7,
-        LineH = 8,
-        FireBall = 9,
-        GameOverBG = 10,
-        GameOverButton = 11,
-        BangEffect = 12,
-        LineVEffect = 13,
-        LineHEffect = 14
+        None = 0,
+        PlayButton = 1,
+        GameObject1 = 2,
+        GameObject2 = 3,
+        GameObject3 = 4,
+        GameObject4 = 5,
+        GameObject5 = 6,
+        Bang = 7,
+        LineV = 8,
+        LineH = 9,
+        FireBall = 10,
+        GameOverBG = 11,
+        GameOverButton = 12,
+        BangEffect = 13,
+        LineVEffect = 14,
+        LineHEffect = 15,
+        ToggleButton = 16
     }
 }

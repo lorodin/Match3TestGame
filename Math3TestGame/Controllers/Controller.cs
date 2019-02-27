@@ -41,7 +41,6 @@ namespace Math3TestGame.Controllers
     public enum ControllerNames
     {
         Start = 0,
-        Play = 1,
-        GameOver = 2
+        Play = 1
     }
 }

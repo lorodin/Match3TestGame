@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Math3TestGame.Models.Interfaces;
 using Math3TestGame.Tools;
+using Math3TestGame.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -12,19 +9,36 @@ namespace Math3TestGame.Renders
 {
     public class StartRenderer : IRenderer
     {
-        private IDrawableModel playButton;
-
         private TextureHelper tHelper;
 
-        public StartRenderer(IDrawableModel playButton)
+        private List<AUIControl> controls;
+
+        private GameConfigs gc;
+
+        public StartRenderer(List<AUIControl> controls)
         {
-            this.playButton = playButton;
+            this.controls = controls;
             tHelper = TextureHelper.GetInstance();
+            gc = GameConfigs.GetInstance();
         }
 
         public void Draw(SpriteBatch sbatch)
         {
-            sbatch.Draw(tHelper.DefaultSpriteMap, playButton.Region, tHelper.GetTextureRegion(playButton.SpriteName, playButton.SpriteAnimationStep), Color.White);
+            foreach (var control in controls)
+            {
+                if (control.Background != SpriteName.None)
+                { 
+                    sbatch.Draw(tHelper.DefaultSpriteMap, 
+                                control.Region, 
+                                tHelper.GetTextureRegion(control.Background, control.SpriteAnimationStep), 
+                                control.BackgroundColor, 0, Vector2.Zero, SpriteEffects.None, 0.3f);
+                }
+                if (!string.IsNullOrEmpty(control.Text))
+                    sbatch.DrawString(control.Font, 
+                                      control.Text, 
+                                      control.TextPosition, 
+                                      control.TextColor, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.5f);
+            }
         }
     }
 }

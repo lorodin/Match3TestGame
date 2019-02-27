@@ -44,6 +44,20 @@
 /processorParam:TextureFormat=Color
 /build:scottpilgrim_multiple.png
 
+#begin sprite_font18.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:sprite_font18.spritefont
+
+#begin sprite_font24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:sprite_font24.spritefont
+
 #begin sprites_map.png
 /importer:TextureImporter
 /processor:TextureProcessor

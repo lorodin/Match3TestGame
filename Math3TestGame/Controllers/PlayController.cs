@@ -2,6 +2,7 @@
 using Math3TestGame.Models.GameModels;
 using Math3TestGame.Renders;
 using Math3TestGame.Tools;
+using Math3TestGame.UI;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -15,48 +16,72 @@ namespace Math3TestGame.Controllers
     public class PlayController : Controller
     {
         private GameModel gameModel;
-
-        private GameTimerModel gameTimerModel;
-        private BonusPointsModel bonusPointsModel;
-
+        
         private GameMatrix gameMatrix;
-        private GameObjectFactory goFactory;
 
         private GameConfigs gc;
 
         private AGameObject selected;
 
+        private Label lbTimer;
+        private Label lbPoints;
+
+        private int totalPoints = 0;
+        private int game_time;
+
         public PlayController() : base(ControllerNames.Play)
         {
-            Rectangle[,] regions = new Rectangle[8, 8];
-
             gc = GameConfigs.GetInstance();
 
-            for (int i = 0; i < 8; i++)
+            game_time = gc.GameTime;
+
+            Point size = new Point(8, 8);
+
+            switch (gc.GameType)
             {
-                for (int j = 0; j < 8; j++)
+                case GameType.G6x6:
+                    size = new Point(6, 6);
+                    break;
+                case GameType.G6x8:
+                    size = new Point(6, 8);
+                    break;
+                case GameType.G8x9:
+                    size = new Point(8, 9);
+                    break;
+            }
+
+            Rectangle[,] regions = new Rectangle[size.Y, size.X];
+
+            int offsetX = (10 - size.X) / 2;
+            int offsetY = size.Y == 6 ? 2 : 1;
+        
+            for (int i = 0; i < size.X; i++)
+            {
+                for (int j = 0; j < size.Y; j++)
                 {
-                    regions[i, j] = new Rectangle(gc.GetRealPoint(j + 1, i + 1), new Point(gc.RegionWidth, gc.RegionHeight));
+                    regions[j, i] = new Rectangle(gc.GetRealPoint(i + offsetX, j + offsetY), new Point(gc.RegionWidth, gc.RegionHeight));
                 }
             }
 
-            gameMatrix = new GameMatrix(regions, 8, 8);
+            gameMatrix = new GameMatrix(regions, size.Y, size.X);
 
             gameModel = new GameModel(gameMatrix);
 
             gameMatrix.OnItemKilled += () =>
             {
-                bonusPointsModel.Points += 1;
+                lbPoints.Text = "Total points: " + (totalPoints++);
             };
 
-            gameTimerModel = new GameTimerModel();
-            bonusPointsModel = new BonusPointsModel();
-            gameModel.Timer = gameTimerModel;
-            gameModel.BonusPoints = bonusPointsModel;
+            var pPoint = gc.GetRealPoint(1, 0.5f);
+            var tPoint = gc.GetRealPoint(7.5f, 0.5f);
 
+            lbPoints = new Label(gc.DefaultFont12, "Total points: 0", pPoint.X, pPoint.Y);
+            lbTimer = new Label(gc.DefaultFont12, "Time: " + game_time, tPoint.X, tPoint.Y);
+
+            gameModel.Controls.Add(lbPoints);
+            gameModel.Controls.Add(lbTimer);
+            
             renderer = new PlayRenderer(gameModel);
-
-            gameTimerModel.Start();
         }
 
         private void OnLineProgress(int i, int j)
@@ -104,12 +129,21 @@ namespace Math3TestGame.Controllers
 
         public override void Update(int dt)
         {
-            if (gameModel.GameOver)
+            if (gameModel.State == GameState.GAME_OVER)
             {
-                ChangeController(ControllerNames.GameOver);
+                ChangeController(ControllerNames.Start);
                 return;
             }
+            
             gameModel.Update(dt);
+
+            var left_time = game_time - gameModel.SecondsOver;
+
+            if (left_time <= 0) left_time = 0;
+
+            lbTimer.Text = "Time: " + left_time;
+
+            if (left_time == 0) gameModel.State = GameState.GAME_OVER;
         }
     }
 }
