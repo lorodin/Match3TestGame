@@ -58,7 +58,6 @@
     <Compile Include="Models\GameModels\SimpleGameObject.cs" />
     <Compile Include="UI\AUIControl.cs" />
     <Compile Include="Models\Interfaces\IBonusEffect.cs" />
-    <Compile Include="Models\Interfaces\IDrawableModel.cs" />
     <Compile Include="Models\Interfaces\IDynamic.cs" />
     <Compile Include="UI\Label.cs" />
     <Compile Include="UI\PlayButton.cs" />
