@@ -240,29 +240,52 @@ namespace Math3TestGame.Models.GameModels
                 var left = current;
                 var marker = current;
 
+
                 while(marker != null)
                 {
                     int count = 0;
+                    
+                    var start = marker;
+                    left = marker;
 
-                    while(left != null && left.SpriteName == marker.SpriteName)
+                    while (start != null && start.SpriteName == SpriteName.GameObject6)
                     {
                         count++;
                         left = left.Right;
+                        start = start.Right;
                     }
+                    
+                    while(left != null && left.SpriteName == start.SpriteName)
+                    {
+                        count++;
+                        left = left.Right;
 
+                       if(left != null && left.SpriteName == SpriteName.GameObject6)
+                        {
+                            count++;
+                            left = left.Right;
+                        }
+                    }
+                    
                     while(marker != left)
                     {
-                        marker.hKilled = count;
-
-                        if (count >= 3)
+                        if(marker.SpriteName == SpriteName.GameObject6)
                         {
-                            State = MatrixState.KILL;
-
-                            //marker.Kill();
+                            marker.hKilled = marker.hKilled > count ? marker.hKilled : count;
+                        }
+                        else
+                        {
+                            marker.hKilled = count;
                         }
 
+                        if (marker.hKilled >= 3)
+                        {
+                            State = MatrixState.KILL;
+                        }
                         marker = marker.Right;
                     }
+
+                    if (marker != null && marker.Left != null && marker.Left.SpriteName == SpriteName.GameObject6) marker = marker.Left;
                 }
                 current = current.Bottom;
             }
@@ -278,28 +301,52 @@ namespace Math3TestGame.Models.GameModels
                 {
                     int count = 0;
 
-                    while(top != null && top.SpriteName == marker.SpriteName)
+                    var start = marker;
+                    top = marker;
+
+                    while(start != null && start.SpriteName == SpriteName.GameObject6)
                     {
                         count++;
                         top = top.Bottom;
+                        start = start.Bottom;
+                    }
+
+                    while (top != null && top.SpriteName == start.SpriteName)
+                    {
+                        count++;
+                        top = top.Bottom;
+                        if (top != null && top.SpriteName == SpriteName.GameObject6)
+                        {
+                            count++;
+                            top = top.Bottom;
+                        }
                     }
 
                     while(marker != top)
                     {
-                        marker.vKilled = count;
+                        if (marker.SpriteName == SpriteName.GameObject6)
+                        {
+                            marker.vKilled = marker.vKilled > count ? marker.vKilled: count;
+                        }
+                        else
+                        {
+                            marker.vKilled = count;
+                        }
 
-                        if (count >= 3)
+                        if (marker.vKilled >= 3)
                         {
                             State = MatrixState.KILL;
-                            //marker.Kill();
                         }
 
                         marker = marker.Bottom;
                     }
+
+                   if (marker != null && marker.Top != null && marker.Top.SpriteName == SpriteName.GameObject6) marker = marker.Top;
                 }
 
                 current = current.Right;
             }
+
             if(State == MatrixState.KILL)
             {
                 current = first;
@@ -310,7 +357,15 @@ namespace Math3TestGame.Models.GameModels
                     {
                         var marker = bottom;
 
-                        if (marker.hKilled >= 3 || marker.vKilled >= 3) marker.Kill();
+                        if (marker.hKilled >= 3 || marker.vKilled >= 3)
+                        {
+                            marker.Kill();
+                        }else 
+                        {
+                            marker.hKilled = 0;
+                            marker.vKilled = 0;
+                        }
+
 
                         bottom = bottom.Bottom;
                     }
@@ -376,6 +431,7 @@ namespace Math3TestGame.Models.GameModels
         public void ReplaceItem(AGameObject replaced, BonusEffect bonus = BonusEffect.NONE)
         {
             AGameObject ni = null;
+            
 
             switch (bonus)
             {
@@ -384,6 +440,9 @@ namespace Math3TestGame.Models.GameModels
                     break;
                 case BonusEffect.LINE_H:
                     ni = gFactory.GetGameObject(replaced, LineType.H);
+                    break;
+                case BonusEffect.MULTICOLOR:
+                    ni = new MulticolorGameObject(replaced);
                     break;
                 default:
                     ni = gFactory.GetGameObject(replaced, bonus);

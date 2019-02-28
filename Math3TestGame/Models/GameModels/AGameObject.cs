@@ -408,7 +408,8 @@ namespace Math3TestGame.Models.GameModels
         BANG = 1,
         LINE_V = 2,
         LINE_H = 3,
-        WAIT_BANG = 4
+        WAIT_BANG = 4,
+        MULTICOLOR = 5
     }
     
     public enum PositionAnimationState

@@ -32,7 +32,7 @@ namespace Math3TestGame.Models.GameModels
 
             if (hKilled >= 3 && vKilled >= 3)
             {
-                Parent.ReplaceItem(this, BonusEffect.BANG);
+                Parent.ReplaceItem(this, BonusEffect.MULTICOLOR);
                 return;
             }
             else if (Selected)

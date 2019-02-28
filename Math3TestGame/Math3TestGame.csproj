@@ -55,6 +55,7 @@
     <Compile Include="Models\GameModels\AGameObject.cs" />
     <Compile Include="Models\GameModels\GameObjectFactory.cs" />
     <Compile Include="Models\GameModels\LineGameObject.cs" />
+    <Compile Include="Models\GameModels\MulticolorGameObject.cs" />
     <Compile Include="Models\GameModels\SimpleGameObject.cs" />
     <Compile Include="Tools\AudioHelper.cs" />
     <Compile Include="UI\AUIControl.cs" />

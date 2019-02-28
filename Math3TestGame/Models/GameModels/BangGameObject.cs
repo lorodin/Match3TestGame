@@ -41,32 +41,8 @@ namespace Math3TestGame.Models.GameModels
         public override void Kill()
         {
             if (!CanKilled()) return;
-
-            //BonusEffects.Add(new WaitBangEffect());
+            
             SetBonusEffect(new WaitBangEffect());
-            /*
-            if(Left != null)
-            {
-                if (Left.Top != null) Left.Top.Kill();
-                Left.Kill();
-            }
-            if(Top != null)
-            {
-                if (Top.Right != null) Top.Right.Kill();
-                Top.Kill();
-            }
-            if(Right != null)
-            {
-                if (Right.Bottom != null) Right.Bottom.Kill();
-                Right.Kill();
-            }
-            if(Bottom != null)
-            {
-                if (Bottom.Left != null) Bottom.Left.Kill();
-                Bottom.Kill();
-            }
-
-            AnimationState = SpriteAnimationState.HIDE;*/
         }
     }
 }

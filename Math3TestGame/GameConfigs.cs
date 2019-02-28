@@ -28,7 +28,7 @@ namespace Math3TestGame
         public int RegionWidth { get; set; }
         public int RegionHeight { get; set; }
 
-        public int MaxPoints { get; set; } = 200;
+        public int MaxPoints { get; set; } = 1200;
 
         public int ADTime { get; } = 10;
 
@@ -36,7 +36,7 @@ namespace Math3TestGame
 
         public float DefaultSpeed = 0.5f;
 
-        public int GameTime { get; private set; } = 60;
+        public int GameTime { get; private set; } = 1200;
 
         public GameType GameType { get; set; } = GameType.G8x8;
         
