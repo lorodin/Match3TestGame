@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 
 namespace Math3TestGame
 {
@@ -27,6 +28,8 @@ namespace Math3TestGame
         public int RegionWidth { get; set; }
         public int RegionHeight { get; set; }
 
+        public int MaxPoints { get; set; } = 200;
+
         public int ADTime { get; } = 10;
 
         public int BOMB_TIME { get; } = 250;
@@ -36,6 +39,20 @@ namespace Math3TestGame
         public int GameTime { get; private set; } = 60;
 
         public GameType GameType { get; set; } = GameType.G8x8;
+        
+        public Game CurrentGame { get; set; }
+
+        public bool SoundOn
+        {
+            get
+            {
+                return MediaPlayer.IsMuted;
+            }
+            set
+            {
+                MediaPlayer.IsMuted = value;
+            }
+        }
 
         public int Width {
             get {
@@ -85,7 +102,7 @@ namespace Math3TestGame
 
         private GameConfigs()
         {
-
+            SoundOn = false;
         }
     }
 

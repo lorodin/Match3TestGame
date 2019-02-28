@@ -36,9 +36,4 @@ namespace Math3TestGame.UI
         }
     }
 
-    public enum ButtonState
-    {
-        HOVER = 0,
-        NONE = 1
-    }
 }

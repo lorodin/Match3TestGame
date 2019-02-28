@@ -14,12 +14,8 @@ namespace Math3TestGame.UI
     {
         
         public SpriteAnimationState AnimationState { get; set; }
-
-        public ButtonState ButtonState { get; set; } = ButtonState.NONE;
-
-        public ToggleButtonState ToggleState { get; set; } = ToggleButtonState.OFF;
         
-        private int ddt = 0;
+        public ToggleButtonState ToggleState { get; set; } = ToggleButtonState.OFF;
         
         public GameType GameType { get; private set; }
 

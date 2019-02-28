@@ -1,9 +1,11 @@
 ﻿using Math3TestGame.Controllers;
 using Math3TestGame.Tools;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
+using Microsoft.Xna.Framework.Media;
 using System.Diagnostics;
 
 namespace Math3TestGame
@@ -52,10 +54,13 @@ namespace Math3TestGame
             GameConfigs.GetInstance().DefaultFont18 = Content.Load<SpriteFont>("sprite_font18");
             GameConfigs.GetInstance().DefaultFont24 = Content.Load<SpriteFont>("sprite_font24");
 
+            GameConfigs.GetInstance().CurrentGame = this;
+
             GameConfigs.GetInstance().Center = new Point(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2);
             GameConfigs.GetInstance().Width = Window.ClientBounds.Width;
             GameConfigs.GetInstance().Height = Window.ClientBounds.Height;
 
+            AudioHelper.GetInstance().SetSong(SongName.BANG, Content.Load<SoundEffect>("bang"));
         }
 
         private void changeController(ControllerNames name)

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Math3TestGame.Models.GameModels;
 using Math3TestGame.Models.Interfaces;
 using Math3TestGame.UI;
+using Math3TestGame.UI.Dialogs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -24,14 +25,12 @@ namespace Math3TestGame.Models
         private SwapModel clientSwapModel;
 
         public List<AUIControl> Controls { get; private set; } = new List<AUIControl>();
-
-
+        
         public GameModel(GameMatrix gameMatrix)
         {
             GameMatrix = gameMatrix;
         }
-
-
+        
         public void ClientSwapV(AGameObject go1, AGameObject go2)
         {
             GameMatrix.SwapV(go1, go2);
@@ -66,6 +65,11 @@ namespace Math3TestGame.Models
 
         public void Update(int dt)
         {
+            if(State == GameState.PAUSE)
+            {
+                return;
+            }
+
             timeOver += dt;
             
 

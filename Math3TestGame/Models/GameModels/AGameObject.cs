@@ -152,7 +152,10 @@ namespace Math3TestGame.Models.GameModels
             if (finded.Count == 0)
             {
                 BonusEffects.Add(bEffect);
-
+                if(bEffect.BonusType == BonusEffect.BANG)
+                {
+                    AudioHelper.GetInstance().Play(SongName.BANG);
+                }
                 if (bEffect.BonusType == BonusEffect.LINE_H || bEffect.BonusType == BonusEffect.LINE_V)
                 {
                     ((LineBonusEffect)bEffect).BeforeLastStep += (effect) =>
@@ -278,6 +281,8 @@ namespace Math3TestGame.Models.GameModels
         
         private void BangNear()
         {
+            AudioHelper.GetInstance().Play(SongName.BANG);
+
             if (Left != null)
             {
                 if (Left.Top != null) Left.Top.Kill(new BangBonusEffect());

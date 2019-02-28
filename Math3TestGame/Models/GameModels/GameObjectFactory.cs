@@ -44,9 +44,15 @@ namespace Math3TestGame.Models.GameModels
 
         public AGameObject GetGameObject(Rectangle region, GameMatrix parent, AGameObject left = null, AGameObject right = null, AGameObject top = null, AGameObject bottom = null)
         {
-            return new SimpleGameObject(region, RandomSpriteName(), parent, left, right, top, bottom);
+            return new SimpleGameObject(region, RandomSpriteName(left, top), parent, left, right, top, bottom);
         }
         
+        public SpriteName RandomSpriteName(AGameObject left, AGameObject top)
+        {
+            SpriteName result = RandomSpriteName();
+            if (left != null && left.SpriteName == result || top != null && top.SpriteName == result) return RandomSpriteName(left, top);
+            return result;
+        }
 
         public SpriteName RandomSpriteName()
         {

@@ -30,6 +30,7 @@ namespace Math3TestGame.Models.GameModels
             {
                 case BonusEffect.BANG:
                     ((BangGameObject)item).Kill();
+
                     break;
                 case BonusEffect.NONE:
                     item.Kill();

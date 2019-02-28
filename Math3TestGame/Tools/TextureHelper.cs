@@ -176,6 +176,29 @@ namespace Math3TestGame.Tools
                 new Rectangle(768, 2660, 256, 256),
                 new Rectangle(1024, 2660, 256, 256)
             });
+
+            textureRegions.Add(SpriteName.SimpleButton, new[]
+            {
+                new Rectangle(768, 3172, 256, 72),
+                new Rectangle(1024, 3172, 256, 72),
+                new Rectangle(1280, 3172, 256, 72),
+                new Rectangle(1536, 3172, 256, 72)
+            });
+
+            textureRegions.Add(SpriteName.DialogBackground, new[]
+            {
+                new Rectangle(0, 3172, 768, 512)
+            });
+
+            textureRegions.Add(SpriteName.Overllay, new[]
+            {
+                new Rectangle(0, 3684, 128, 128)
+            });
+
+            textureRegions.Add(SpriteName.Check, new[]
+            {
+                new Rectangle(129, 3684, 128, 128)
+            });
         }
 
 
@@ -206,6 +229,10 @@ namespace Math3TestGame.Tools
         BangEffect = 13,
         LineVEffect = 14,
         LineHEffect = 15,
-        ToggleButton = 16
+        ToggleButton = 16,
+        SimpleButton = 17,
+        DialogBackground = 18,
+        Overllay = 19,
+        Check = 20
     }
 }
