@@ -89,28 +89,144 @@ namespace Math3TestGame.Models.GameModels
 
             gFactory = GameObjectFactory.GetInstance();
 
-            for (int i = 0; i < w; i++)
+            do
             {
-                current = gFactory.GetGameObject(regions[i, 0], this, null, null, current);
-                
-                left = current;
-
-                if (i == 0) first = current;
-
-                for(int j = 1; j < h; j++)
+                for (int i = 0; i < w; i++)
                 {
-                    var top = (left.Top != null && left.Top.Right != null) ? left.Top.Right : null;
+                    current = gFactory.GetGameObject(regions[i, 0], this, null, null, current);
 
-                    var ni = gFactory.GetGameObject(regions[i, j], this, left, null, top);
+                    left = current;
 
-                    ni.Value = new Point(i, j);
+                    if (i == 0) first = current;
 
-                    left = ni;
+                    for (int j = 1; j < h; j++)
+                    {
+                        var top = (left.Top != null && left.Top.Right != null) ? left.Top.Right : null;
+
+                        var ni = gFactory.GetGameObject(regions[i, j], this, left, null, top);
+
+                        ni.Value = new Point(i, j);
+
+                        left = ni;
+                    }
                 }
-            }
+            } while (!HasTurn());
         }
 
        
+        private bool HasTurn()
+        {
+            var current = first;
+
+            while(current != null)
+            {
+                var left = current;
+
+                while(left != null)
+                {
+                    var marker = left;
+                    int l = 0;
+                    while(marker != null && marker.SpriteName == left.SpriteName)
+                    {
+                        l++;
+
+                        if (marker.Right == null) break;
+
+                        marker = marker.Right;
+                        
+                        if(marker.SpriteName != left.SpriteName)
+                        {
+                            if(marker.Top != null && marker.Top.SpriteName == left.SpriteName)
+                            {
+                                l++;
+
+                                if (marker.Right == null) break;
+
+                                marker = marker.Right;
+
+                                continue;
+                            }
+
+                            if(marker.Bottom != null && marker.Bottom.SpriteName == left.SpriteName)
+                            {
+                                l++;
+
+                                if (marker.Right == null) break;
+
+                                marker = marker.Right;
+
+                                continue;
+                            }
+                        }
+                    }
+
+                    if (l >= 3) return true;
+                    
+                    left = marker.Right;
+                }
+
+                current = current.Bottom;
+            }
+
+            current = first;
+
+            while(current != null)
+            {
+
+                var top = current;
+
+                while(top != null)
+                {
+                    var marker = top;
+
+                    int l = 0;
+
+                    while(marker != null && marker.SpriteName == top.SpriteName)
+                    {
+                        l++;
+
+                        if (marker.Bottom == null) break;
+
+                        marker = marker.Bottom;
+
+                        if (marker == null) break;
+
+                        if(marker.SpriteName != top.SpriteName)
+                        {
+                            if(marker.Left != null && marker.Left.SpriteName == top.SpriteName)
+                            {
+                                l++;
+
+                                if (marker.Bottom == null) break;
+
+                                marker = marker.Bottom;
+                                
+                                continue;
+                            }
+
+                            if(marker.Right != null && marker.Right.SpriteName == top.SpriteName)
+                            {
+                                l++;
+
+                                if (marker.Bottom == null) break;
+
+                                marker = marker.Bottom;
+
+                                continue;
+                            }
+                        }
+                    }
+
+                    if (l >= 3) return true;
+
+                    top = marker.Bottom;
+                }
+
+                current = current.Bottom;
+            }
+
+            return false;
+        }
 
 
         private void FindKilled()

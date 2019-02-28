@@ -199,6 +199,19 @@ namespace Math3TestGame.Tools
             {
                 new Rectangle(129, 3684, 128, 128)
             });
+
+            textureRegions.Add(SpriteName.GameObject6, new[]
+            {
+                new Rectangle(0, 2916, 256, 256),
+                new Rectangle(256, 2916, 256, 256),
+                new Rectangle(512, 2916, 256, 256),
+                new Rectangle(768, 2916, 256, 256),
+                new Rectangle(1024, 2916, 256, 256),
+                new Rectangle(1280, 2916, 256, 256),
+                new Rectangle(1536, 2916, 256, 256),
+                new Rectangle(2048, 2916, 256, 256),
+                new Rectangle(2304, 2916, 256, 256)
+            });
         }
 
 
@@ -220,19 +233,20 @@ namespace Math3TestGame.Tools
         GameObject3 = 4,
         GameObject4 = 5,
         GameObject5 = 6,
-        Bang = 7,
-        LineV = 8,
-        LineH = 9,
-        FireBall = 10,
-        GameOverBG = 11,
-        GameOverButton = 12,
-        BangEffect = 13,
-        LineVEffect = 14,
-        LineHEffect = 15,
-        ToggleButton = 16,
-        SimpleButton = 17,
-        DialogBackground = 18,
-        Overllay = 19,
-        Check = 20
+        GameObject6 = 7,
+        Bang = 8,
+        LineV = 9,
+        LineH = 10,
+        FireBall = 11,
+        GameOverBG = 12,
+        GameOverButton = 13,
+        BangEffect = 14,
+        LineVEffect = 15,
+        LineHEffect = 16,
+        ToggleButton = 17,
+        SimpleButton = 18,
+        DialogBackground = 19,
+        Overllay = 20,
+        Check = 21
     }
 }
