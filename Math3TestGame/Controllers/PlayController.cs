@@ -1,4 +1,5 @@
 ﻿using Math3TestGame.Models;
+using Math3TestGame.Models.BonusEffects;
 using Math3TestGame.Models.GameModels;
 using Math3TestGame.Renders;
 using Math3TestGame.Tools;
@@ -36,7 +37,9 @@ namespace Math3TestGame.Controllers
         private WinDialog winDialog;
         private GameOverDialog gameOverDialog;
 
-        public List<ADialog> Dialogs { get; private set; } 
+        public List<ADialog> Dialogs { get; private set; }
+
+        private int timeNothing = 0;
 
         private ADialog CurrentDialog
         {
@@ -125,7 +128,7 @@ namespace Math3TestGame.Controllers
         {
             var current = CurrentDialog;
 
-            if(current != null)
+            if (current != null)
             {
                 var result = current.MouseClick(x, y);
                 switch (result)
@@ -146,20 +149,26 @@ namespace Math3TestGame.Controllers
                 }
                 return;
             }
-            
-            if(pauseButton.Region.Contains(x, y))
+
+            if (pauseButton.Region.Contains(x, y))
             {
                 gameModel.State = GameState.PAUSE;
                 pauseDialog.Show();
                 return;
             }
-
+            
             if (!gameModel.CanClientInput) return;
+
 
             foreach (var go in gameMatrix)
             {
                 if(go.Region.Contains(x, y))
                 {
+                    foreach(var goch in gameMatrix)
+                    {
+                        goch.ClearHelp();
+                    }
+
                     if (selected != null)
                     {
                         if(selected.Left == go || selected.Right == go)
@@ -207,8 +216,29 @@ namespace Math3TestGame.Controllers
                 return;
             }
             
+            
+
             gameModel.Update(dt);
             
+
+            if (gameModel.CanClientInput && selected == null)
+            {
+                timeNothing += dt;
+
+                if (timeNothing >= gc.HelperWait && gameModel.CanClientInput)
+                {
+                    timeNothing = 0;
+                    foreach (var go in gameModel.GameMatrix)
+                    {
+                        go.HasTurn();
+                    }
+                }
+            }
+            else
+            {
+                timeNothing = 0;
+            }
+
             var left_time = game_time - gameModel.SecondsOver;
 
             if (left_time <= 0) left_time = 0;

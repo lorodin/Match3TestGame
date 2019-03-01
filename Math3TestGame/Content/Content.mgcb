@@ -31,12 +31,36 @@
 /processorParam:TextureFormat=Color
 /build:bg.png
 
+#begin bg_music.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:bg_music.mp3
+
 #begin File.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:File.spritefont;test_font.spritefont
+
+#begin kill.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:kill.mp3
+
+#begin kill2.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:kill2.mp3
+
+#begin lazer.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:lazer.mp3
 
 #begin scottpilgrim_multiple.png
 /importer:TextureImporter

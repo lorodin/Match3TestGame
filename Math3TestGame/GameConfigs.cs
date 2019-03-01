@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Math3TestGame.Tools;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
@@ -28,7 +29,7 @@ namespace Math3TestGame
         public int RegionWidth { get; set; }
         public int RegionHeight { get; set; }
 
-        public int MaxPoints { get; set; } = 1200;
+        public int MaxPoints { get; set; } = 300;
 
         public int ADTime { get; } = 10;
 
@@ -36,21 +37,33 @@ namespace Math3TestGame
 
         public float DefaultSpeed = 0.5f;
 
-        public int GameTime { get; private set; } = 1200;
+        public int GameTime { get; private set; } = 120;
 
         public GameType GameType { get; set; } = GameType.G8x8;
         
         public Game CurrentGame { get; set; }
 
-        public bool SoundOn
-        {
+        public int HelperWait { get; set; } = 6 * 1000;
+
+        public int HelpTime { get; set; } = 2 * 1000;
+
+        private bool soundOn = true;
+
+        public bool SoundOn {
             get
             {
-                return MediaPlayer.IsMuted;
+                return soundOn;
             }
             set
             {
-                MediaPlayer.IsMuted = value;
+                if (!value)
+                {
+                    AudioHelper.GetInstance().StopBackground();
+                }else if (!soundOn)
+                {
+                    AudioHelper.GetInstance().PlayBackground();
+                }
+                soundOn = value;
             }
         }
 
@@ -102,7 +115,7 @@ namespace Math3TestGame
 
         private GameConfigs()
         {
-            SoundOn = false;
+            //SoundOn = false;
         }
     }
 

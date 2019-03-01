@@ -108,10 +108,10 @@ namespace Math3TestGame.Renders
                             sbatch.Draw(tHelper.DefaultSpriteMap, go.Region, tHelper.GetTextureRegion(SpriteName.BangEffect, be.AnimationStep), Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.5f);
                             break;
                         case Models.GameModels.BonusEffect.LINE_H:
-                            sbatch.Draw(tHelper.DefaultSpriteMap, go.Region, 
-                                        tHelper.GetTextureRegion(SpriteName.LineHEffect, be.AnimationStep), 
-                                        Color.White, 0, Vector2.Zero, 
-                                        ((LineBonusEffect)be).Direction == LineBonusEffectDirection.LR ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 
+                            sbatch.Draw(tHelper.DefaultSpriteMap, go.Region,
+                                        tHelper.GetTextureRegion(SpriteName.LineHEffect, be.AnimationStep),
+                                        Color.White, 0, Vector2.Zero,
+                                        ((LineBonusEffect)be).Direction == LineBonusEffectDirection.LR ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
                                         0.5f);
                             break;
                         case Models.GameModels.BonusEffect.LINE_V:
@@ -120,6 +120,19 @@ namespace Math3TestGame.Renders
                                         Color.White, 0, Vector2.Zero,
                                         ((LineBonusEffect)be).Direction == LineBonusEffectDirection.BT ? SpriteEffects.None : SpriteEffects.FlipVertically,
                                         0.5f);
+                            break;
+                        case Models.GameModels.BonusEffect.HELP:
+                            var sn = ((HelpBonusEffect)be).Direction == Models.GameModels.Direction.TOP || ((HelpBonusEffect)be).Direction == Models.GameModels.Direction.BOTTOM ?
+                                            SpriteName.HelpV : 
+                                            SpriteName.HelpH;
+
+                            var se = ((HelpBonusEffect)be).Direction == Models.GameModels.Direction.BOTTOM ?
+                                        SpriteEffects.FlipVertically :
+                                        ((HelpBonusEffect)be).Direction == Models.GameModels.Direction.LEFT ?
+                                        SpriteEffects.FlipHorizontally :
+                                        SpriteEffects.None;
+
+                            sbatch.Draw(tHelper.DefaultSpriteMap, go.Region, tHelper.GetTextureRegion(sn, be.AnimationStep), Color.White, 0, Vector2.Zero, se, 0.6f);
                             break;
                     }
                 }

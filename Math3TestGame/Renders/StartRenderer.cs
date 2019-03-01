@@ -38,6 +38,10 @@ namespace Math3TestGame.Renders
                                       control.Text, 
                                       control.TextPosition, 
                                       control.TextColor, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.5f);
+                if (control.Image != SpriteName.None)
+                {
+                    sbatch.Draw(tHelper.DefaultSpriteMap, control.Region, tHelper.GetTextureRegion(control.Image, 0), control.BackgroundColor, 0, Vector2.Zero, SpriteEffects.None, 0.96f);
+                }
             }
         }
     }

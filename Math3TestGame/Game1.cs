@@ -61,6 +61,14 @@ namespace Math3TestGame
             GameConfigs.GetInstance().Height = Window.ClientBounds.Height;
 
             AudioHelper.GetInstance().SetSong(SongName.BANG, Content.Load<SoundEffect>("bang"));
+            AudioHelper.GetInstance().SetSong(SongName.LAZER, Content.Load<SoundEffect>("lazer"));
+            AudioHelper.GetInstance().SetSong(SongName.KILL, Content.Load<SoundEffect>("kill2"));
+            AudioHelper.GetInstance().BackgroundMusic = Content.Load<Song>("bg_music");
+
+            if (GameConfigs.GetInstance().SoundOn)
+            {
+                AudioHelper.GetInstance().PlayBackground();
+            }
         }
 
         private void changeController(ControllerNames name)

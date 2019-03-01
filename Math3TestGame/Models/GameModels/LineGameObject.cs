@@ -27,6 +27,8 @@ namespace Math3TestGame.Models.GameModels
         {
             if (!CanKilled()) return;
 
+            AudioHelper.GetInstance().Play(SongName.LAZER);
+
             switch (Bonus)
             {
                 case BonusEffect.LINE_H:

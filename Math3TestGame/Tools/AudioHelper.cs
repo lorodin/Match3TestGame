@@ -41,11 +41,27 @@ namespace Math3TestGame.Tools
 
             songs[name] = song;
         }
+
+        public Song BackgroundMusic { get; set; }
+
+        public void PlayBackground()
+        {
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Volume = 0.6f;
+            MediaPlayer.Play(BackgroundMusic);
+        }
+
+        public void StopBackground()
+        {
+            MediaPlayer.Stop();
+        }
     }
 
     public enum SongName
     {
         NONE = 0,
-        BANG = 1
+        BANG = 1,
+        LAZER = 2,
+        KILL = 3
     }
 }

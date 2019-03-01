@@ -40,6 +40,7 @@ namespace Math3TestGame.Models.GameModels
                 else
                 {
                     AnimationState = SpriteAnimationState.NONE;
+                    SpriteAnimationStep = 0;
                 }
             }
         }
@@ -139,6 +140,11 @@ namespace Math3TestGame.Models.GameModels
         {
             if (Bottom == null) return;
             Bottom.Kill(new LineBonusEffect(LineBonusEffectDirection.TB));
+        }
+
+        public void SetBonus(IBonusEffect bEffect)
+        {
+            BonusEffects.Add(bEffect);
         }
 
         public void Kill(IBonusEffect bEffect)
@@ -273,12 +279,249 @@ namespace Math3TestGame.Models.GameModels
             }
         }
 
+        private SearchModel CountNear(SearchModel search, AGameObject next, Direction direction)
+        {
+            if (next == null) return search;
+
+            if(search.SpriteName == next.SpriteName)
+            {
+                search.Count++;
+                return CountNear(search, direction == Direction.TOP ? next.Top : 
+                                         direction == Direction.BOTTOM ? next.Bottom : 
+                                         direction == Direction.LEFT ? next.Left : 
+                                         next.Right, 
+                                         direction);
+
+            }else if(search.SpriteName == SpriteName.GameObject6)
+            {
+                search.SpriteName = next.SpriteName;
+                search.Count++;
+                return CountNear(search, direction == Direction.TOP ? next.Top : 
+                                         direction == Direction.BOTTOM ? next.Bottom : 
+                                         direction == Direction.LEFT ? next.Left : 
+                                         next.Right, 
+                                         direction);
+            }
+
+            return search;
+        }
+
+        public bool HasTurn()
+        {
+
+
+            var sl = new SearchModel
+            {
+                Count = 0,
+                SpriteName = SpriteName
+            };
+
+            var st = new SearchModel
+            {
+                Count = 0,
+                SpriteName = SpriteName
+            };
+
+            var sr = new SearchModel
+            {
+                Count = 0,
+                SpriteName = SpriteName
+            };
+
+            var sb = new SearchModel
+            {
+                Count = 0,
+                SpriteName = SpriteName
+            };
+
+
+            var slt = new SearchModel
+            {
+                Count = 0,
+                SpriteName = SpriteName
+            };
+
+            var slb = new SearchModel
+            {
+                Count = 0,
+                SpriteName = SpriteName
+            };
+
+            if (Left != null)
+            {
+                slt = CountNear(slt, Left.Top, Direction.TOP);
+                slb = CountNear(slb, Left.Bottom, Direction.BOTTOM);
+                
+                if (slt.SpriteName == slb.SpriteName)
+                {
+                    int totalCount = slt.Count + slb.Count + 1;
+                    if(totalCount >= 3)
+                    {
+                        BonusEffects.Add(new HelpBonusEffect(Direction.LEFT));
+                        SetDefaultState();
+                        return true;
+                    }
+                }
+
+                sl = CountNear(sl, Left.Left, Direction.LEFT);
+
+                if(sl.Count + 1 >= 3)
+                {
+                    BonusEffects.Add(new HelpBonusEffect(Direction.LEFT));
+                    return true;
+                }
+            }
+
+            var srt = new SearchModel
+            {
+                Count = 0,
+                SpriteName = SpriteName
+            };
+
+            var srb = new SearchModel
+            {
+                Count = 0,
+                SpriteName = SpriteName
+            };
+
+            if (Right != null)
+            {
+                srt = CountNear(srt, Right.Top, Direction.TOP);
+                srb = CountNear(srb, Right.Bottom, Direction.BOTTOM);
+
+                if(srt.SpriteName == srb.SpriteName)
+                {
+                    int totalCount = srt.Count + srb.Count + 1;
+                    if(totalCount >= 3)
+                    {
+                        BonusEffects.Add(new HelpBonusEffect(Direction.RIGHT));
+                       return true;
+                    }
+                }
+
+                sr = CountNear(sr, Right.Right, Direction.RIGHT);
+                if(sr.Count + 1 >= 3)
+                {
+                    BonusEffects.Add(new HelpBonusEffect(Direction.RIGHT));
+                    return true;
+                }
+            }
+
+
+            var stl = new SearchModel
+            {
+                Count = 0,
+                SpriteName = SpriteName
+            };
+
+            var str = new SearchModel
+            {
+                Count = 0,
+                SpriteName = SpriteName
+            };
+
+            if(Top != null)
+            {
+                stl = CountNear(stl, Top.Left, Direction.LEFT);
+                str = CountNear(str, Top.Right, Direction.RIGHT);
+
+                if(stl.SpriteName == str.SpriteName)
+                {
+                    int totalCount = stl.Count + str.Count + 1;
+                    if(totalCount >= 3)
+                    {
+                        BonusEffects.Add(new HelpBonusEffect(Direction.TOP));
+                        return true;
+                    }
+                }
+
+                st = CountNear(st, Top.Top, Direction.TOP);
+                if(st.Count >= 3)
+                {
+                    BonusEffects.Add(new HelpBonusEffect(Direction.TOP));
+                    return true;
+                }
+            }
+
+            var sbl = new SearchModel
+            {
+                Count = 0,
+                SpriteName = SpriteName
+            };
+
+            var sbr = new SearchModel
+            {
+                Count = 0,
+                SpriteName = SpriteName
+            };
+
+            if(Bottom != null)
+            {
+                sbl = CountNear(sbl, Bottom.Left, Direction.LEFT);
+                sbr = CountNear(sbr, Bottom.Right, Direction.RIGHT);
+                if(sbl.SpriteName == sbr.SpriteName)
+                {
+                    int totalCount = sbl.Count + sbr.Count + 1;
+                    if(totalCount >= 3)
+                    {
+                        BonusEffects.Add(new HelpBonusEffect(Direction.BOTTOM));
+                        return true;
+                    }
+                }
+
+                sb = CountNear(sb, Bottom.Bottom, Direction.BOTTOM);
+
+                if(sb.Count + 1 >= 3)
+                {
+                    BonusEffects.Add(new HelpBonusEffect(Direction.BOTTOM));
+                    return true;
+                }
+            }
+
+
+            if(sbl.Count + 1 >= 3 || sbr.Count + 1 >= 3)
+            {
+                BonusEffects.Add(new HelpBonusEffect(Direction.BOTTOM));
+                return true;
+            }
+
+            if(stl.Count + 1 >= 3 || str.Count + 1 >= 3)
+            {
+                BonusEffects.Add(new HelpBonusEffect(Direction.TOP));
+                return true;
+            }
+
+            if (slt.Count + 1 >= 3 || slb.Count + 1 >= 3)
+            {
+                BonusEffects.Add(new HelpBonusEffect(Direction.LEFT));
+                return true;
+            }
+
+            if(srt.Count + 1 >= 3 || srb.Count + 1 >= 3)
+            {
+                BonusEffects.Add(new HelpBonusEffect(Direction.RIGHT));
+                return true;
+            }
+
+            return false;
+        }
+
+        public void SetDefaultState()
+        {
+            AnimationState = SpriteAnimationState.NONE;
+            SpriteAnimationStep = 0;
+        }
 
         public bool IsBusy()
         {
-            return Moving != PositionAnimationState.NONE || (AnimationState != SpriteAnimationState.NONE && AnimationState != SpriteAnimationState.SELECT) || BonusEffects.Count != 0;
+            return Moving != PositionAnimationState.NONE || (AnimationState != SpriteAnimationState.NONE && AnimationState != SpriteAnimationState.SELECT) || BonusEffects.FindAll(b => b.BonusType != BonusEffect.HELP).Count != 0;
         }
         
+        public void ClearHelp()
+        {
+            BonusEffects.RemoveAll(b => b.BonusType == BonusEffect.HELP);
+        }
+
         private void BangNear()
         {
             AudioHelper.GetInstance().Play(SongName.BANG);
@@ -339,22 +582,7 @@ namespace Math3TestGame.Models.GameModels
                     }
                     countEnd += BonusEffects[i].State == DynamicState.END || BonusEffects[i].State == DynamicState.STOP ? 1 : 0;
                 }
-
-                /*foreach(var b in BonusEffects)
-                {
-                    b.Update(dt);
-                    if(b.State == DynamicState.END)
-                    {
-                        switch (b.BonusType)
-                        {
-                            case BonusEffect.WAIT_BANG:
-                                BangNear();
-                                break;
-                        }
-                    }
-                    countEnd += b.State == DynamicState.END || b.State == DynamicState.STOP ? 1 : 0;
-                }*/
-
+                
                 if (countEnd == BonusEffects.Count) BonusEffects.Clear();
             }
 
@@ -409,9 +637,19 @@ namespace Math3TestGame.Models.GameModels
         LINE_V = 2,
         LINE_H = 3,
         WAIT_BANG = 4,
-        MULTICOLOR = 5
+        MULTICOLOR = 5,
+        HELP = 6,
     }
     
+    public enum Direction
+    {
+        TOP = 0,
+        BOTTOM = 1,
+        RIGHT = 2,
+        LEFT = 3
+    }
+    
+
     public enum PositionAnimationState
     {
         NONE = 0,

@@ -47,6 +47,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="GameConfigs.cs" />
     <Compile Include="Models\BonusEffects\BangBonusEffect.cs" />
+    <Compile Include="Models\BonusEffects\HelpBonusEffect.cs" />
     <Compile Include="Models\BonusEffects\LineBonusEffect.cs" />
     <Compile Include="Models\BonusEffects\WaitBangEffect.cs" />
     <Compile Include="Models\GameModel.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Models\GameModels\LineGameObject.cs" />
     <Compile Include="Models\GameModels\MulticolorGameObject.cs" />
     <Compile Include="Models\GameModels\SimpleGameObject.cs" />
+    <Compile Include="Models\SearchModel.cs" />
     <Compile Include="Tools\AudioHelper.cs" />
     <Compile Include="UI\AUIControl.cs" />
     <Compile Include="Models\Interfaces\IBonusEffect.cs" />

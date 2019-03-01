@@ -48,7 +48,9 @@ namespace Math3TestGame.Models.GameModels
                     return;
                 }
             }
-            
+
+            AudioHelper.GetInstance().Play(SongName.KILL);
+
             AnimationState = SpriteAnimationState.HIDE;
         }
     }

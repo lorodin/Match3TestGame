@@ -24,6 +24,8 @@ namespace Math3TestGame.Models
 
         private SwapModel clientSwapModel;
 
+        private SwapModel helpSwapModel;
+
         public List<AUIControl> Controls { get; private set; } = new List<AUIControl>();
         
         public GameModel(GameMatrix gameMatrix)
@@ -31,6 +33,11 @@ namespace Math3TestGame.Models
             GameMatrix = gameMatrix;
         }
         
+        public void HelpSwap(SwapModel help)
+        {
+            helpSwapModel = help;
+        }
+
         public void ClientSwapV(AGameObject go1, AGameObject go2)
         {
             GameMatrix.SwapV(go1, go2);
@@ -54,6 +61,8 @@ namespace Math3TestGame.Models
         }
 
         private int timeOver = 0;
+
+        private int timeNothing = 0;
 
         public int SecondsOver
         {
@@ -82,6 +91,7 @@ namespace Math3TestGame.Models
             if (State == GameState.GAME_OVER) return;
 
 
+
             bool isBusy = false;
             bool hasInvisible = false;
 
@@ -94,7 +104,18 @@ namespace Math3TestGame.Models
 
             if (!isBusy)
             {
-                if (hasInvisible)
+                if (helpSwapModel != null)
+                {
+                    switch (helpSwapModel.Direction)
+                    {
+                        case SwapDirection.HORIZONTAL:
+                            GameMatrix.SwapH(helpSwapModel.GameObject1, helpSwapModel.GameObject2);
+                            break;
+                        case SwapDirection.VERTICAL:
+                            GameMatrix.SwapV(helpSwapModel.GameObject1, helpSwapModel.GameObject2);
+                            break;
+                    }
+                }else if (hasInvisible)
                 {
                     GameMatrix.Next(MatrixState.KILL);
                 }

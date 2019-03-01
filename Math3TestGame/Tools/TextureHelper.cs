@@ -124,20 +124,7 @@ namespace Math3TestGame.Tools
                 new Rectangle(1024, 2148, 256, 256),
                 new Rectangle(1280, 2148, 256, 256),
             });
-
-            textureRegions.Add(SpriteName.GameOverBG, new[]
-            {
-                new Rectangle(256, 1380, 768, 512)
-            });
-
-            textureRegions.Add(SpriteName.GameOverButton, new[]
-            {
-                new Rectangle(1024, 1380, 256, 74),
-                new Rectangle(1280, 1380, 256, 74),
-                new Rectangle(1536, 1380, 256, 74),
-
-            });
-
+            
             textureRegions.Add(SpriteName.BangEffect, new[]
             {
                 new Rectangle(0, 2404, 256, 256),
@@ -212,6 +199,16 @@ namespace Math3TestGame.Tools
                 new Rectangle(2048, 2916, 256, 256),
                 new Rectangle(2304, 2916, 256, 256)
             });
+
+            textureRegions.Add(SpriteName.HelpH, new[]
+            {
+                new Rectangle(256, 1380, 256, 256)
+            });
+
+            textureRegions.Add(SpriteName.HelpV, new[]
+            {
+                new Rectangle(512, 1380, 256, 256)
+            });
         }
 
 
@@ -238,8 +235,6 @@ namespace Math3TestGame.Tools
         LineV = 9,
         LineH = 10,
         FireBall = 11,
-        GameOverBG = 12,
-        GameOverButton = 13,
         BangEffect = 14,
         LineVEffect = 15,
         LineHEffect = 16,
@@ -247,6 +242,8 @@ namespace Math3TestGame.Tools
         SimpleButton = 18,
         DialogBackground = 19,
         Overllay = 20,
-        Check = 21
+        Check = 21,
+        HelpH = 22,
+        HelpV
     }
 }

@@ -23,6 +23,8 @@ namespace Math3TestGame.Controllers
 
         private List<AUIControl> controls = new List<AUIControl>();
 
+        private CheckBox chbPlayMusic;
+
         public StartController() : base(ControllerNames.Start)
         {
             gc = GameConfigs.GetInstance();
@@ -33,6 +35,8 @@ namespace Math3TestGame.Controllers
             tbtns.Add(new ToggleButton(GameType.G6x6, gc.Center.X - 3 * gc.RegionWidth / 2, gc.Center.Y + 00, gc.RegionWidth, gc.RegionHeight));
             tbtns.Add(new ToggleButton(GameType.G8x9, gc.Center.X + 1 * gc.RegionWidth / 2, gc.Center.Y + 00, gc.RegionWidth, gc.RegionHeight));
             tbtns.Add(new ToggleButton(GameType.G6x8, gc.Center.X + 5 * gc.RegionWidth / 2, gc.Center.Y + 00, gc.RegionWidth, gc.RegionHeight));
+
+            chbPlayMusic = new CheckBox(gc.DefaultFont12, "Sound: ", 20 + gc.Center.X - 3 * gc.RegionWidth / 2, gc.Center.Y  - 90, 30, 30, Color.White);
 
             foreach (var t in tbtns)
                 if (gc.GameType == t.GameType)
@@ -52,8 +56,10 @@ namespace Math3TestGame.Controllers
                                     new Color(36, 77, 17)));
 
             controls.Add(new Label(gc.DefaultFont12, 
-                                        "You must score 500 points by moving adjacent \r\n          pieces.You have one minute. Let's go!",
-                                        5 + gc.Center.X - 4 * gc.RegionWidth, gc.Center.Y - 150));
+                                        "You must score 300 points by moving adjacent \r\n          pieces.You have two minute. Let's go!",
+                                        7 + gc.Center.X - 4 * gc.RegionWidth, gc.Center.Y - 150));
+
+            controls.Add(chbPlayMusic);
 
 
 
@@ -68,6 +74,13 @@ namespace Math3TestGame.Controllers
         
         public override void MouseClick(int x, int y)
         {
+            if (chbPlayMusic.Region.Contains(x, y))
+            {
+                gc.SoundOn = !gc.SoundOn;
+                chbPlayMusic.Image = gc.SoundOn ? Tools.SpriteName.Check : Tools.SpriteName.None;
+                return;
+            }
+
             if (playButton.Region.Contains(x, y))
             {
                 ChangeController(ControllerNames.Play);
