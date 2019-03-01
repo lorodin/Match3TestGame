@@ -84,13 +84,13 @@ namespace Math3TestGame.Models.GameModels
             this.w = w;
             this.h = h;
 
-            AGameObject left = null;
-            AGameObject current = null;
 
             gFactory = GameObjectFactory.GetInstance();
 
             do
             {
+                AGameObject left = null;
+                AGameObject current = null;
                 for (int i = 0; i < w; i++)
                 {
                     current = gFactory.GetGameObject(regions[i, 0], this, null, null, current);
